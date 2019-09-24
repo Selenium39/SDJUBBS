@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.selenium.sdjubbs.common.mapper.BlockMapper">
+    <select id="getAllBlock" resultType="Block">
+        select id,block_picture,title,author_id,author_name,article_num,save_num,create_time
+        from block
+        order by save_num desc,article_num desc
+    </select>
+    <select id="getBlockById" resultType="Block">
+        select id,block_picture,title,author_id,author_name,article_num,save_num,create_time
+        from block
+        where id = #{id}
+    </select>
+</mapper>

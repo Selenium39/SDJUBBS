@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.selenium.sdjubbs.common.mapper.ArticleMapper">
+    <insert id="addArticle" parameterType="Article">
+        insert into article(title,content,block_id,block_name,author_id,author_name,create_time,priority)
+        values (#{title},#{content},#{blockId},#{blockName},#{authorId},#{authorName},#{createTime},#{priority})
+    </insert>
+    <select id="getArticleById" parameterType="Integer" resultType="Article">
+        select id,title,content,block_id,block_name,author_id,author_name,create_time,priority
+        from article
+        where id = #{id}
+    </select>
+    <select id="getAllArticleByBlockId" parameterType="Integer" resultType="Article">
+        select id,title,content,block_id,block_name,author_id,author_name,create_time,priority
+        from article
+        where block_id = #{id}
+        order by priority desc,create_time desc
+    </select>
+</mapper>
