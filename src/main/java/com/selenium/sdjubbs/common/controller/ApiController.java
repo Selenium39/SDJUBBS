@@ -5,11 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.selenium.sdjubbs.common.api.Api;
 import com.selenium.sdjubbs.common.bean.Article;
 import com.selenium.sdjubbs.common.bean.Block;
+import com.selenium.sdjubbs.common.bean.Comment;
 import com.selenium.sdjubbs.common.bean.User;
-import com.selenium.sdjubbs.common.service.ArticleService;
-import com.selenium.sdjubbs.common.service.BlockService;
-import com.selenium.sdjubbs.common.service.RedisService;
-import com.selenium.sdjubbs.common.service.UserService;
+import com.selenium.sdjubbs.common.service.*;
 import com.selenium.sdjubbs.common.util.Constant;
 import com.selenium.sdjubbs.common.util.MD5Util;
 import com.selenium.sdjubbs.common.util.Result;
@@ -42,6 +40,8 @@ public class ApiController {
     private BlockService blockService;
     @Autowired
     private ArticleService articleService;
+    @Autowired
+    private CommentService commentService;
 
 
     /**
@@ -142,8 +142,20 @@ public class ApiController {
         Block block = blockService.getBlockById(id);
         PageHelper.startPage(pn, Constant.PAGE_SIZE);
         List<Article> articles = articleService.getAllArticleByBlockId(id);
-        PageInfo<Article> pageInfo = new PageInfo<>(articles, Constant.PAGE_SIZE);
-        return Result.success().add("block", block).add("articles", articles).add("pageInfo", pageInfo);
+        PageInfo<Article> pageInfo = new PageInfo<>(articles, Constant.NAVIGATE_PAGE_SIZE);
+        return Result.success().add("block", block).add("pageInfo", pageInfo);
+    }
+
+    /**
+     * method: get
+     * url: /article/id
+     * description: 根据板块id获取文章
+     */
+    @GetMapping(Api.ARTICLE)
+    public Result getArticle(@PathVariable("id") int id) {
+        Article article = articleService.getArticleById(id);
+        List<Comment> comments = commentService.getCommentByArticleId(id);
+        return Result.success().add("article", article).add("comments", comments);
     }
 
 

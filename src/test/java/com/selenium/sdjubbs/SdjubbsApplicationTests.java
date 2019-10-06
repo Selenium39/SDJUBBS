@@ -1,7 +1,9 @@
 package com.selenium.sdjubbs;
 
 import com.selenium.sdjubbs.common.bean.Article;
+import com.selenium.sdjubbs.common.bean.Comment;
 import com.selenium.sdjubbs.common.service.ArticleService;
+import com.selenium.sdjubbs.common.service.CommentService;
 import com.selenium.sdjubbs.common.util.TimeUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +19,8 @@ public class SdjubbsApplicationTests {
 
     @Autowired
     private ArticleService articleService;
+    @Autowired
+    private CommentService commentService;
 
     @Test
     public void insertArticle(){

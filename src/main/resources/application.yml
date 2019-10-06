@@ -55,11 +55,13 @@ spring:
 
 
 #mybatis------------------------------------------------------------------
-mybatis-plus:
+mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
   type-aliases-package: com.selenium.sdjubbs.common.bean
   configuration:
     map-underscore-to-camel-case: true
+
+
 
 
 

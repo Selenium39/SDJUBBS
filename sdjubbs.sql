@@ -3,15 +3,15 @@
 
  Source Server         : mysql
  Source Server Type    : MySQL
- Source Server Version : 50726
+ Source Server Version : 80017
  Source Host           : localhost:3306
  Source Schema         : sdjubbs
 
  Target Server Type    : MySQL
- Target Server Version : 50726
+ Target Server Version : 80017
  File Encoding         : 65001
 
- Date: 24/09/2019 21:37:56
+ Date: 07/10/2019 01:51:31
 */
 
 SET NAMES utf8mb4;
@@ -22,7 +22,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `article`;
 CREATE TABLE `article`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `title` varchar(35) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `content` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `block_id` int(10) UNSIGNED NOT NULL,
@@ -34,6 +34,7 @@ CREATE TABLE `article`  (
   PRIMARY KEY (`id`, `create_time`) USING BTREE,
   INDEX `fk_article_block`(`block_id`) USING BTREE,
   INDEX `fk_article_author`(`author_id`) USING BTREE,
+  INDEX `id`(`id`) USING BTREE,
   CONSTRAINT `fk_article_author` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_article_block` FOREIGN KEY (`block_id`) REFERENCES `block` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 3001 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
@@ -3071,6 +3072,30 @@ INSERT INTO `block` VALUES (4, '/common/images/0.jpg', '4444', 16, 'selenium', 0
 INSERT INTO `block` VALUES (5, '/common/images/0.jpg', '555', 16, 'selenium', 0, 0, '2019-09-03 12:17:21');
 
 -- ----------------------------
+-- Table structure for comment
+-- ----------------------------
+DROP TABLE IF EXISTS `comment`;
+CREATE TABLE `comment`  (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `content` tinytext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `create_time` datetime(0) NOT NULL,
+  `article_id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `user_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `fk_comment_article`(`article_id`) USING BTREE,
+  INDEX `fk_comment_user`(`user_id`) USING BTREE,
+  CONSTRAINT `fk_comment_article` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_comment_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of comment
+-- ----------------------------
+INSERT INTO `comment` VALUES (1, '第一条评论', '2019-10-06 23:27:04', 13, 37, 'zhangxiya');
+INSERT INTO `comment` VALUES (2, '第二条评论', '2019-10-06 23:56:25', 13, 37, 'zhangxiya');
+
+-- ----------------------------
 -- Table structure for user
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
@@ -3090,7 +3115,7 @@ CREATE TABLE `user`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `unique_index_email`(`email`) USING BTREE COMMENT 'email必须唯一',
   UNIQUE INDEX `unique_index_username`(`username`) USING BTREE COMMENT 'username必须唯一'
-) ENGINE = InnoDB AUTO_INCREMENT = 50 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 52 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user
@@ -3110,5 +3135,7 @@ INSERT INTO `user` VALUES (46, 'selenium231', '2d9a97fa7c1d0c8496cf4b4998c699da'
 INSERT INTO `user` VALUES (47, 'selenium123', 'e4b5eb111e98a3355c0d6a5dd255bf91', 'fae4b34-2', 0, 2, '89548412123122@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-07 21:47:27', '2019-09-07 21:47:27', 0);
 INSERT INTO `user` VALUES (48, 'test', '5cb1fe62b65a3d8dcf1d124c4226a13d', 'da19a6c-a', 0, 2, 'test@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-13 16:57:11', '2019-09-13 16:57:11', 0);
 INSERT INTO `user` VALUES (49, 'selenium222', '9cafb14e25927ce21944da04f31b057a', '3ff3494-5', 0, 2, '895484122222@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-21 10:53:15', '2019-09-21 10:53:15', 0);
+INSERT INTO `user` VALUES (50, 'aaaa', '0977f9ab7e9653f2a5b0792c715dc603', '53bf7ee-2', 0, 2, '897632122@qq.com', '00000000000', '/common/images/0.jpg', '2019-10-01 12:10:01', '2019-10-01 12:10:01', 0);
+INSERT INTO `user` VALUES (51, 'aaaa1', '73021ad0ac074040aeae05831443330b', 'c4b4a20-c', 0, 2, '2132222@qq.com', '00000000000', '/common/images/0.jpg', '2019-10-01 12:11:58', '2019-10-01 12:11:58', 0);
 
 SET FOREIGN_KEY_CHECKS = 1;

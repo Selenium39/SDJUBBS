@@ -2,6 +2,7 @@ package com.selenium.sdjubbs.common.util;
 
 public class Constant {
     public static final Integer PAGE_SIZE = 20;
+    public static final Integer NAVIGATE_PAGE_SIZE=10;
 
     public static final Integer SUCCESS_CODE = 200;
     public static final String SUCCESS = "SUCCESS";
