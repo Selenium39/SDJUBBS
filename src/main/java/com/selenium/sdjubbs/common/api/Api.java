@@ -7,4 +7,5 @@ public class Api {
     public static final String BLOCKS="/block";
     public static final String BLOCK="/block/{id}";
     public static final String ARTICLE="/article/{id}";
+    public static final String COMMENT="/comment";
 }

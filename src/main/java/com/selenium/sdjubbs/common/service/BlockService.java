@@ -21,6 +21,7 @@ public class BlockService implements BlockMapper {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Block getBlockById(int id) {
         return blockMapper.getBlockById(id);
     }

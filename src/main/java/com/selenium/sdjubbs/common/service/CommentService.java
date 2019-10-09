@@ -4,6 +4,7 @@ import com.selenium.sdjubbs.common.bean.Comment;
 import com.selenium.sdjubbs.common.mapper.CommentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,7 +14,14 @@ public class CommentService implements CommentMapper {
     private CommentMapper commentMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Comment> getCommentByArticleId(Integer id) {
         return commentMapper.getCommentByArticleId(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
+    public Integer addComment(Comment comment) {
+        return commentMapper.addComment(comment);
     }
 }

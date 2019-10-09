@@ -158,5 +158,18 @@ public class ApiController {
         return Result.success().add("article", article).add("comments", comments);
     }
 
+    /**
+     * method: post
+     * url: /comment
+     * description: 增加一条评论
+     */
+    @PostMapping(Api.COMMENT)
+    protected Result addComment(String username,String sessionId,Comment comment) {
+        comment.setCreateTime(TimeUtil.getTime());
+        comment.setUserId(userService.getUserByUsername(username).getId());
+        log.info("userId"+userService.getUserByUsername(username).toString());
+        commentService.addComment(comment);
+        return Result.success().add("comment",comment);
+    }
 
 }

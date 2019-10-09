@@ -13,6 +13,7 @@ public class RedisService {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    @Transactional(rollbackFor = {Exception.class})
     public void set(String key, String value) {
         stringRedisTemplate.opsForValue().set(key, value);
     }
@@ -22,6 +23,7 @@ public class RedisService {
         return stringRedisTemplate.opsForValue().get(key);
     }
 
+    @Transactional(rollbackFor = {Exception.class})
     public Boolean delete(String key){return stringRedisTemplate.delete(key);}
 
 }
