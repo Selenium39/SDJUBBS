@@ -8,11 +8,9 @@ import com.selenium.sdjubbs.common.bean.Block;
 import com.selenium.sdjubbs.common.bean.Comment;
 import com.selenium.sdjubbs.common.bean.User;
 import com.selenium.sdjubbs.common.service.*;
-import com.selenium.sdjubbs.common.util.Constant;
-import com.selenium.sdjubbs.common.util.MD5Util;
-import com.selenium.sdjubbs.common.util.Result;
-import com.selenium.sdjubbs.common.util.TimeUtil;
+import com.selenium.sdjubbs.common.util.*;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -164,12 +162,16 @@ public class ApiController {
      * description: 增加一条评论
      */
     @PostMapping(Api.COMMENT)
-    protected Result addComment(String username,String sessionId,Comment comment) {
+    protected Result addComment(String username, String sessionId, Comment comment) {
+        if (comment.getContent().trim() == null || comment.getContent().trim().length() == 0 || comment.getContent().trim().equals(" ")) {
+            return Result.failure(Constant.USER_INPUT_EMPTY_CODE, Constant.USER_INPUT_EMPTY);
+        }
+        comment.setContent(HtmlUtil.htmlFilter(comment.getContent()));
         comment.setCreateTime(TimeUtil.getTime());
         comment.setUserId(userService.getUserByUsername(username).getId());
-        log.info("userId"+userService.getUserByUsername(username).toString());
+        log.info("userId" + userService.getUserByUsername(username).toString());
         commentService.addComment(comment);
-        return Result.success().add("comment",comment);
+        return Result.success().add("comment", comment);
     }
 
 }

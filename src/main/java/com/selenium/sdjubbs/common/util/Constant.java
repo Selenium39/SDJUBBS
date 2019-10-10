@@ -36,5 +36,8 @@ public class Constant {
     public static final Integer REGISTER_USER_EMAIL_EXIST_CODE = 9002;
     public static final String REGISTER_USER_EMAIL_EXIST = "邮箱已被注册";
 
+    public static final Integer USER_INPUT_EMPTY_CODE = 4000;
+    public static final String USER_INPUT_EMPTY = "输入内容为空";
+
 
 }

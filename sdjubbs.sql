@@ -11,7 +11,7 @@
  Target Server Version : 80017
  File Encoding         : 65001
 
- Date: 07/10/2019 01:51:31
+ Date: 11/10/2019 00:33:17
 */
 
 SET NAMES utf8mb4;
@@ -3087,13 +3087,20 @@ CREATE TABLE `comment`  (
   INDEX `fk_comment_user`(`user_id`) USING BTREE,
   CONSTRAINT `fk_comment_article` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_comment_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of comment
 -- ----------------------------
 INSERT INTO `comment` VALUES (1, '第一条评论', '2019-10-06 23:27:04', 13, 37, 'zhangxiya');
 INSERT INTO `comment` VALUES (2, '第二条评论', '2019-10-06 23:56:25', 13, 37, 'zhangxiya');
+INSERT INTO `comment` VALUES (3, '第三条评论', '2019-10-10 00:21:13', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (4, '第四条评论', '2019-10-10 00:21:51', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (5, '第五条评论', '2019-10-10 00:28:05', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (6, '第六条评论', '2019-10-10 00:28:46', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (7, '第一条评论', '2019-10-10 22:36:29', 2888, 16, 'selenium');
+INSERT INTO `comment` VALUES (22, 'alert(\"123\");', '2019-10-10 23:34:04', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (23, '\n\nalert(\"123\");\n\n', '2019-10-10 23:34:46', 13, 16, 'selenium');
 
 -- ----------------------------
 -- Table structure for user
