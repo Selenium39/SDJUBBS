@@ -2,8 +2,10 @@ package com.selenium.sdjubbs;
 
 import com.selenium.sdjubbs.common.bean.Article;
 import com.selenium.sdjubbs.common.bean.Comment;
+import com.selenium.sdjubbs.common.bean.Reply;
 import com.selenium.sdjubbs.common.service.ArticleService;
 import com.selenium.sdjubbs.common.service.CommentService;
+import com.selenium.sdjubbs.common.service.ReplyService;
 import com.selenium.sdjubbs.common.util.TimeUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.Time;
 import java.util.UUID;
 
 @RunWith(SpringRunner.class)
@@ -21,6 +24,8 @@ public class SdjubbsApplicationTests {
     private ArticleService articleService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private ReplyService replyService;
 
     @Test
     public void insertArticle(){
@@ -37,5 +42,18 @@ public class SdjubbsApplicationTests {
               articleService.addArticle(article);
 
           }
+    }
+
+    @Test
+    public void insertReply(){
+        Reply reply = new Reply();
+        reply.setContent("111");
+        reply.setCommentId(1);
+        reply.setCreateTime(TimeUtil.getTime());
+        reply.setReceiverUserId(16);
+        reply.setReceiverUserName("selenium");
+        reply.setSendUserId(37);
+        reply.setSendUserName("zhangxiya");
+        replyService.addReply(reply);
     }
 }

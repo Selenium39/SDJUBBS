@@ -7,15 +7,16 @@ import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
-public class Comment implements Serializable {
+public class Reply implements Serializable {
     private Integer id;
     private String content;
     private String createTime;
-    private Integer articleId;
-    private Integer userId;
-    private String userName;
-
-    public Comment() {
+    private Integer commentId;
+    private Integer sendUserId;
+    private String sendUserName;
+    private Integer receiverUserId;
+    private String receiverUserName;
+    public Reply(){
 
     }
 }
