@@ -3,10 +3,7 @@ package com.selenium.sdjubbs.common.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.selenium.sdjubbs.common.api.Api;
-import com.selenium.sdjubbs.common.bean.Article;
-import com.selenium.sdjubbs.common.bean.Block;
-import com.selenium.sdjubbs.common.bean.Comment;
-import com.selenium.sdjubbs.common.bean.User;
+import com.selenium.sdjubbs.common.bean.*;
 import com.selenium.sdjubbs.common.service.*;
 import com.selenium.sdjubbs.common.util.*;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +37,8 @@ public class ApiController {
     private ArticleService articleService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private ReplyService replyService;
 
 
     /**
@@ -124,7 +123,7 @@ public class ApiController {
      * url: /block
      * description: 获得所有板块
      */
-    @GetMapping(Api.BLOCKS)
+    @GetMapping(Api.BLOCK)
     public Result getAllBlock() {
         List<Block> blocks = blockService.getAllBlock();
         return Result.success().add("blocks", blocks);
@@ -135,7 +134,7 @@ public class ApiController {
      * url: /block/id
      * description: 根据板块id获取该板块下的所有文章
      */
-    @GetMapping(Api.BLOCK)
+    @GetMapping(Api.BLOCK + "/{id}")
     public Result getBlock(@PathVariable("id") int id, @RequestParam("pn") int pn) {
         Block block = blockService.getBlockById(id);
         PageHelper.startPage(pn, Constant.PAGE_SIZE);
@@ -147,13 +146,25 @@ public class ApiController {
     /**
      * method: get
      * url: /article/id
-     * description: 根据板块id获取文章
+     * description: 根据文章id获取文章和文章下所有评论
      */
-    @GetMapping(Api.ARTICLE)
+    @GetMapping(Api.ARTICLE + "/{id}")
     public Result getArticle(@PathVariable("id") int id) {
         Article article = articleService.getArticleById(id);
         List<Comment> comments = commentService.getCommentByArticleId(id);
         return Result.success().add("article", article).add("comments", comments);
+    }
+
+    /**
+     * method: get
+     * url: /comment/id
+     * description: 根据评论id获取评论和评论下所有回复
+     */
+    @GetMapping(Api.COMMENT + "/{id}")
+    public Result getComment(@PathVariable("id") int id) {
+        Comment comment = commentService.getCommentById(id);
+        List<Reply> replys = replyService.getReplyByCommentId(id);
+        return Result.success().add("comment", comment).add("replys", replys);
     }
 
     /**

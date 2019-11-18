@@ -20,6 +20,11 @@ public class CommentService implements CommentMapper {
     }
 
     @Override
+    public Comment getCommentById(Integer id) {
+        return commentMapper.getCommentById(id);
+    }
+
+    @Override
     @Transactional(rollbackFor = {Exception.class})
     public Integer addComment(Comment comment) {
         return commentMapper.addComment(comment);

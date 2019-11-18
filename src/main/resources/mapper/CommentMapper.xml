@@ -7,6 +7,11 @@
               where article_id = #{id}
               order by create_time
     </select>
+    <select id="getCommentById" resultType="Comment">
+         select id,content,create_time,article_id,user_id,user_name
+         from comment
+         where id = #{id}
+    </select>
     <insert id="addComment">
         insert into comment(content,create_time,article_id,user_id,user_name)
         values(#{content},#{createTime},#{articleId},#{userId},#{userName})
