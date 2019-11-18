@@ -11,7 +11,7 @@
  Target Server Version : 80017
  File Encoding         : 65001
 
- Date: 11/10/2019 00:33:17
+ Date: 19/11/2019 00:54:46
 */
 
 SET NAMES utf8mb4;
@@ -3087,7 +3087,7 @@ CREATE TABLE `comment`  (
   INDEX `fk_comment_user`(`user_id`) USING BTREE,
   CONSTRAINT `fk_comment_article` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_comment_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 67 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of comment
@@ -3101,6 +3101,77 @@ INSERT INTO `comment` VALUES (6, '第六条评论', '2019-10-10 00:28:46', 13, 1
 INSERT INTO `comment` VALUES (7, '第一条评论', '2019-10-10 22:36:29', 2888, 16, 'selenium');
 INSERT INTO `comment` VALUES (22, 'alert(\"123\");', '2019-10-10 23:34:04', 13, 16, 'selenium');
 INSERT INTO `comment` VALUES (23, '\n\nalert(\"123\");\n\n', '2019-10-10 23:34:46', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (24, '1', '2019-10-11 03:06:31', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (25, '1', '2019-10-11 03:06:32', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (26, '1', '2019-10-11 03:06:33', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (27, '1', '2019-10-11 03:06:34', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (28, '1', '2019-10-11 03:06:34', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (29, '1', '2019-10-11 03:06:34', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (30, '1', '2019-10-11 03:06:35', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (31, '1', '2019-10-11 03:06:35', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (32, '1', '2019-10-11 03:06:36', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (33, '1', '2019-10-11 03:06:36', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (34, '1', '2019-10-11 03:06:36', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (35, '1', '2019-10-11 03:06:37', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (36, '1', '2019-10-11 03:06:37', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (37, '1', '2019-10-11 03:06:38', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (38, '1', '2019-10-11 03:06:38', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (39, '1', '2019-10-11 03:06:39', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (40, '1', '2019-10-11 03:06:39', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (41, '1', '2019-10-11 03:06:39', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (42, '1', '2019-10-11 03:06:40', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (43, '1', '2019-10-11 03:06:41', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (44, '1', '2019-10-11 03:06:44', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (45, '1', '2019-10-11 03:06:45', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (46, '1', '2019-10-11 03:06:46', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (47, '1', '2019-10-11 03:06:46', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (48, '1', '2019-10-11 03:06:47', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (49, '1', '2019-10-11 03:06:49', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (50, '1', '2019-10-11 03:06:49', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (51, '1', '2019-10-11 03:06:50', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (52, '1', '2019-10-11 03:06:50', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (53, '1', '2019-10-11 03:06:51', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (54, '1', '2019-10-11 03:06:52', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (55, '1', '2019-10-11 03:06:53', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (56, '1', '2019-10-11 03:06:53', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (57, '1', '2019-10-11 03:06:54', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (58, '1', '2019-10-11 03:06:54', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (59, '1', '2019-10-11 03:06:55', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (60, '1', '2019-10-11 03:06:55', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (61, '1', '2019-10-11 03:06:56', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (62, '1', '2019-10-11 03:08:10', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (63, '1', '2019-10-11 03:08:11', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (64, '1', '2019-10-11 03:08:12', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (65, '1', '2019-10-13 13:10:29', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (66, '1', '2019-10-13 13:10:53', 13, 16, 'selenium');
+
+-- ----------------------------
+-- Table structure for reply
+-- ----------------------------
+DROP TABLE IF EXISTS `reply`;
+CREATE TABLE `reply`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` tinytext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `create_time` datetime(0) NOT NULL,
+  `comment_id` int(10) UNSIGNED NOT NULL,
+  `send_user_id` int(11) UNSIGNED NOT NULL,
+  `send_user_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `receiver_user_id` int(10) UNSIGNED NOT NULL,
+  `receiver_user_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `fk_reply_comment_comment_id`(`comment_id`) USING BTREE,
+  INDEX `fk_reply_user_send_user_id`(`send_user_id`) USING BTREE,
+  INDEX `fk_reply_user_receiver_user_id`(`receiver_user_id`) USING BTREE,
+  CONSTRAINT `fk_reply_comment_comment_id` FOREIGN KEY (`comment_id`) REFERENCES `comment` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_reply_user_receiver_user_id` FOREIGN KEY (`receiver_user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_reply_user_send_user_id` FOREIGN KEY (`send_user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of reply
+-- ----------------------------
+INSERT INTO `reply` VALUES (1, '111', '2019-10-11 03:17:24', 1, 37, 'zhangxiya', 16, 'selenium');
+INSERT INTO `reply` VALUES (2, '111', '2019-10-13 12:17:33', 1, 37, 'zhangxiya', 16, 'selenium');
 
 -- ----------------------------
 -- Table structure for user
@@ -3122,7 +3193,7 @@ CREATE TABLE `user`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `unique_index_email`(`email`) USING BTREE COMMENT 'email必须唯一',
   UNIQUE INDEX `unique_index_username`(`username`) USING BTREE COMMENT 'username必须唯一'
-) ENGINE = InnoDB AUTO_INCREMENT = 52 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 51 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user
