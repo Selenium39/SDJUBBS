@@ -185,4 +185,21 @@ public class ApiController {
         return Result.success().add("comment", comment);
     }
 
+    /**
+     * method: post
+     * url: /comment
+     * description: 增加一条评论
+     */
+    @PostMapping(Api.REPLY)
+    protected Result addReply(String username, String sessionId, Reply reply) {
+        if (reply.getContent() == null || reply.getContent().trim().length() == 0 || reply.getContent().trim().equals(" ")) {
+            return Result.failure(Constant.USER_INPUT_EMPTY_CODE, Constant.USER_INPUT_EMPTY);
+        }
+        reply.setContent(HtmlUtil.htmlFilter(reply.getContent()));
+        reply.setCreateTime(TimeUtil.getTime());
+        reply.setSendUserId(userService.getUserByUsername(reply.getSendUserName()).getId());
+        replyService.addReply(reply);
+        return Result.success();
+    }
+
 }
