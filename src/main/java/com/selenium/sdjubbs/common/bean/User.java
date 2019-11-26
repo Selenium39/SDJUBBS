@@ -15,13 +15,11 @@ import java.io.Serializable;
  * 用户
  */
 @Data
-@ApiModel
 public class User implements Serializable {
     private Integer id;
     @NotBlank(message = Constant.REGISTER_USER_USERNAME_NULL)
     @Length(min = 4, max = 12, message = Constant.REGISTER_USER_USERNAME_LENGTH)
     @Pattern(regexp = "^[\\u4E00-\\u9FA5A-Za-z0-9]+$", message = Constant.REGISTER_USER_USERNAME_SUPPORT)
-    @ApiModelProperty(name = "username",value = "用户名",required = true)
     private String username;
     @NotBlank(message = Constant.REGISTER_USER_PASSWORD_NULL)
     private String password;
