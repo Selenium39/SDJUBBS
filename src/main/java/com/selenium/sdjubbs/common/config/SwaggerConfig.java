@@ -28,7 +28,7 @@ public class SwaggerConfig {
     public Docket createResApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
-                .select().apis(RequestHandlerSelectors.basePackage("com.selenium.sdjubbs.common.controller"))
+                .select().apis(RequestHandlerSelectors.basePackage("com.selenium.sdjubbs.common"))
                 .paths(PathSelectors.any())
                 .build();
 
