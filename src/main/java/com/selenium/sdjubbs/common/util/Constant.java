@@ -2,13 +2,16 @@ package com.selenium.sdjubbs.common.util;
 
 public class Constant {
     public static final Integer PAGE_SIZE = 20;
-    public static final Integer NAVIGATE_PAGE_SIZE=10;
+    public static final Integer NAVIGATE_PAGE_SIZE = 10;
 
     public static final Integer SUCCESS_CODE = 200;
     public static final String SUCCESS = "SUCCESS";
 
     public static final Integer FAILURE_CODE = 201;
     public static final String FAILURE = "FAILURE";
+
+    public static final Integer REQUEST_PARAM_FORMAT_ERROR_CODE = 400;
+    public static final String REQUEST_PARAM_FORMAT_ERROR = "请求参数格式错误";
 
     public static final Integer LOGIN_USER_NOT_EXIST_CODE = 8001;
     public static final String LOGIN_USER_NOT_EXIST = "用户不存在";
