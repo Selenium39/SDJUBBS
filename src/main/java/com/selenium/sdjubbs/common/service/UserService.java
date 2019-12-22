@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class UserService  implements UserMapper {
+public class UserService implements UserMapper {
 
     @Autowired
     private UserMapper userMapper;
@@ -30,6 +30,24 @@ public class UserService  implements UserMapper {
     @Transactional(readOnly = true)
     public User getUserByEmail(String email) {
         return userMapper.getUserByEmail(email);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public User getUserById(Integer id) {
+        return userMapper.getUserById(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
+    public Integer updateUser(User user) {
+        return userMapper.updateUser(user);
+    }
+
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
+    public Integer deleteUser(Integer id) {
+        return userMapper.deleteUser(id);
     }
 
     @Override

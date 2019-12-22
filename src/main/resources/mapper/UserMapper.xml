@@ -19,4 +19,48 @@
         select id,username,age,gender,email,phone,head_picture,register_time,last_login_time,status
         from user
     </select>
+    <select id="getUserById" parameterType="Integer" resultType="User">
+        select username,password,salt,age,gender,email,phone,head_picture,register_time,last_login_time,status
+        from user
+        where id = #{id}
+    </select>
+    <update id="updateUser" parameterType="User">
+        update user
+        <set>
+            <if test="username!=null">
+                username = #{username},
+            </if>
+            <if test="password!=null">
+                password = #{password},
+            </if>
+            <if test="salt!=null">
+                salt = #{salt},
+            </if>
+            <if test="age!=null">
+                age = #{age},
+            </if>
+            <if test="gender!=null">
+                gender = #{gender},
+            </if>
+            <if test="email!=null">
+                email = #{email},
+            </if>
+            <if test="phone!=null">
+                phone = #{phone},
+            </if>
+            <if test="headPicture!=null">
+                head_picture = #{headPicture},
+            </if>
+            <if test="lastLoginTime!=null">
+                last_login_time = #{lastLoginTime},
+            </if>
+            <if test="status!=null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteUser" parameterType="Integer">
+        delete from user where id = #{id}
+    </delete>
 </mapper>

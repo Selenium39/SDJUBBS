@@ -236,7 +236,6 @@ public class ApiController {
         comment.setContent(HtmlUtil.htmlFilter(comment.getContent()));
         comment.setCreateTime(TimeUtil.getTime());
         comment.setUserId(userService.getUserByUsername(username).getId());
-        log.info("userId" + userService.getUserByUsername(username).toString());
         commentService.addComment(comment);
         return Result.success().add("comment", comment);
     }

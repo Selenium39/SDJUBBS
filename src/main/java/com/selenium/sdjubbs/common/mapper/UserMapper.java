@@ -13,5 +13,11 @@ public interface UserMapper {
 
     User getUserByEmail(String email);
 
+    User getUserById(Integer id);
+
+    Integer updateUser(User user);
+
+    Integer deleteUser(Integer id);
+
     List<User> getAllUser();
 }
