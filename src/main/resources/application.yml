@@ -61,6 +61,10 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
 
+#Setting
+sdjubbs:
+  base-dir-save-path: /src/main/resources/static/common/
+  verify-code-save-path: ${base-dir-save-path}images/verifycode
 
 
 

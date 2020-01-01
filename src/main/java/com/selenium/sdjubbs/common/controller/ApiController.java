@@ -119,8 +119,8 @@ public class ApiController {
             String salt = user.getSalt();
             String realPassword = MD5Util.dbEncryption(password, salt);
             if (password != null && salt != null && realPassword.equals(user.getPassword())) {
-                //存入redis key:username value:sessionId
-                redisService.set(username, session.getId());
+                //存入redis key:username value: sessionId
+                redisService.set("user:name:"+username, session.getId());
                 return Result.success().add("username", username).add("sessionId", session.getId());
             } else {
                 return Result.failure(Constant.FAILURE_CODE, Constant.LOGIN_USER_WRONG_PASSWORD_CODE, Constant.LOGIN_USER_WRONG_PASSWORD);
