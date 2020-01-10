@@ -7,12 +7,14 @@ import com.selenium.sdjubbs.common.service.ArticleService;
 import com.selenium.sdjubbs.common.service.CommentService;
 import com.selenium.sdjubbs.common.service.ReplyService;
 import com.selenium.sdjubbs.common.util.TimeUtil;
+import com.selenium.sdjubbs.common.util.VerifyCodeUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.IOException;
 import java.sql.Time;
 import java.util.UUID;
 
@@ -55,5 +57,10 @@ public class SdjubbsApplicationTests {
         reply.setSendUserId(37);
         reply.setSendUserName("zhangxiya");
         replyService.addReply(reply);
+    }
+
+    @Test
+    public void createVerifyCode() throws IOException {
+         VerifyCodeUtil.drawVerifyCode(200, 50, System.getProperty("user.dir")+"\\src\\main\\resources\\static\\common\\images\\verifycode","test");
     }
 }

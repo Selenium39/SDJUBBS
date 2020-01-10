@@ -65,6 +65,7 @@ mybatis:
 sdjubbs:
   base-dir-save-path: /src/main/resources/static/common/
   verify-code-save-path: ${base-dir-save-path}images/verifycode
+  verify-code-request-path: /common/images/verifycode
 
 
 

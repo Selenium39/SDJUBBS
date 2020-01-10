@@ -15,4 +15,6 @@ public class SdjubbsSetting {
     private String baseDirSavePath;
     @Value("${verify-code-save-path}")
     private String verifyCodeSavePath;
+    @Value("${verify-code-request-path}")
+    private String verifyCodeRequestPath;
 }

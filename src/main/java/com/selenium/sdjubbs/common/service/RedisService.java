@@ -5,6 +5,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * 通过StringRedisTemplate对象来操作redis
  */
@@ -16,6 +18,11 @@ public class RedisService {
     @Transactional(rollbackFor = {Exception.class})
     public void set(String key, String value) {
         stringRedisTemplate.opsForValue().set(key, value);
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    public void set(String key, String value,Integer timeout) {
+        stringRedisTemplate.opsForValue().set(key, value,timeout, TimeUnit.SECONDS);
     }
 
     @Transactional(readOnly = true)

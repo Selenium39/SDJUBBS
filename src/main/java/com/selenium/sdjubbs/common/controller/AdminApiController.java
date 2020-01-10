@@ -6,21 +6,23 @@ import com.github.pagehelper.PageInfo;
 import com.selenium.sdjubbs.common.api.Api;
 import com.selenium.sdjubbs.common.bean.User;
 import com.selenium.sdjubbs.common.config.SdjubbsSetting;
+import com.selenium.sdjubbs.common.service.RedisService;
 import com.selenium.sdjubbs.common.service.UserService;
-import com.selenium.sdjubbs.common.util.Constant;
-import com.selenium.sdjubbs.common.util.Result;
-import com.selenium.sdjubbs.common.util.StringUtil;
-import com.selenium.sdjubbs.common.util.VerifyCodeUtil;
+import com.selenium.sdjubbs.common.util.*;
 import com.sun.media.jfxmedia.logging.Logger;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -32,6 +34,8 @@ public class AdminApiController {
     private UserService userService;
     @Autowired
     private SdjubbsSetting setting;
+    @Autowired
+    private RedisService redisService;
 
     @GetMapping(Api.USER)
     @ApiOperation(value = "获取所有的用户")
@@ -112,14 +116,24 @@ public class AdminApiController {
 
     @GetMapping(Api.VERIFY_CODE)
     @ApiOperation(value = "获取验证码")
-    public Result getVerifyCode(int width, int height) {
-        String savePath = setting.getVerifyCodeSavePath();
-        log.info("verify code save path: " + savePath);
+    public Result getVerifyCode(int width, int height, HttpServletRequest request) {
+        String ip = MD5Util.md5(request.getRemoteAddr()).substring(0, 10);
+        String imagePath = "/common/" + setting.getVerifyCodeSavePath().split("/common/")[1];
+        String savePath = System.getProperty("user.dir") + setting.getVerifyCodeSavePath();
+        FileUtil.deleteFilesWithPrefix(savePath, ip);
+        String imageName = ip + "_" + System.currentTimeMillis();
+        String verifyCode = "";
+        String recordId = "";
+        String verifyCodeKey = "";
         try {
-            VerifyCodeUtil.drawVerifyCode(width, height,setting.getVerifyCodeSavePath(),"test");
+            verifyCode = VerifyCodeUtil.drawVerifyCode(width, height, savePath, imageName);
+            recordId = System.currentTimeMillis() + UUID.randomUUID().toString();
+            verifyCodeKey = "verifycode:" + ip + ":" + recordId;
+            //60秒后验证码失效
+            redisService.set(verifyCodeKey, verifyCode, 60);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return Result.success();
+        return Result.success().add("img", imagePath + "/" + imageName).add("recordId", recordId);
     }
 }
