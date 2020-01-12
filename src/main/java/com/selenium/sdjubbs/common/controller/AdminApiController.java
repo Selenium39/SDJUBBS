@@ -148,27 +148,44 @@ public class AdminApiController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "username", value = "用户名(长度:4-12)", required = true, example = "test"),
             @ApiImplicitParam(name = "password", value = "密码(md5加密)", required = true, example = "3a42503923d841ac9b7ec83eed03b450"),
+            @ApiImplicitParam(name = "verifyCode", value = "验证码", required = true, example = "3111"),
+            @ApiImplicitParam(name = "recordId", value = "验证码唯一标识", required = true, example = "3a42503923d841ac9b7ec83eed03b450")
     })
-    public Result login(String username, String password, String verifyCode, String recordId, HttpServletRequest request) {
+    public Result login(String username, String password, String verifyCode, String recordId, HttpServletRequest request, HttpSession session) {
         String ip = MD5Util.md5(request.getRemoteAddr()).substring(0, 10);
         String verifyCodeKey = "verifycode:" + ip + ":" + recordId;
         String realVerifyCode = redisService.get(verifyCodeKey);
-        if (verifyCode == null || (!verifyCode.equalsIgnoreCase(realVerifyCode))) {
+        if (verifyCode == null || realVerifyCode == null || (!verifyCode.equalsIgnoreCase(realVerifyCode))) {
             return Result.failure(Constant.VERIFY_CODE_WRONG_CODE, Constant.VERIFY_CODE_WRONG);
         }
         log.info("username: " + username + " password: " + password + " verifyCode: " + verifyCode + " recordId: " + recordId);
         Subject subject = SecurityUtils.getSubject();
-        // 2.判断当前用户是否登录
-        if (subject.isAuthenticated() == false) {
-            // 3.将用户名和密码封装
-            UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-            try {
-                // 4.登录
-                subject.login(token);
-            } catch (AuthenticationException e) {
-                return Result.failure();
-            }
+        log.info("用户是否登录,isAuthenticated: " + subject.isAuthenticated());
+        User user = userService.getUserByUsername(username);
+        if (user == null) {
+            return Result.failure(Constant.LOGIN_USER_NOT_EXIST_CODE, Constant.LOGIN_USER_NOT_EXIST);
+        } else if (user.getRole() == 0) {//普通用户
+            return Result.failure(Constant.LOGIN_USER_NOT_ADMIN_CODE, Constant.LOGIN_USER_NOT_ADMIN);
         }
-        return Result.success();
+        // 判断当前用户是否登录
+//        if (!subject.isAuthenticated()) {
+        String salt = user.getSalt();
+        String realPassword = MD5Util.dbEncryption(password, salt);
+        // 将用户名和密码封装
+        UsernamePasswordToken token = new UsernamePasswordToken(username, realPassword);
+        try {
+            // 登录
+            subject.login(token);
+            log.info("login success");
+            //存入redis key:username value: sessionId
+            redisService.set("user:name:" + username, session.getId());
+            return Result.success().add("username", username).add("sessionId", session.getId());
+
+        } catch (AuthenticationException e) {
+            log.info("login failure");
+            e.printStackTrace();
+            return Result.failure(Constant.LOGIN_USER_WRONG_PASSWORD_CODE, Constant.LOGIN_USER_WRONG_PASSWORD);
+        }
+//        }
     }
 }

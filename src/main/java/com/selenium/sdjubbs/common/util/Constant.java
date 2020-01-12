@@ -25,6 +25,9 @@ public class Constant {
     public static final Integer LOGIN_USER_IDLE_CODE = 8004;
     public static final String LOGIN_USER_IDLE = "用户尚未登录或已在其它处登录";
 
+    public static final Integer LOGIN_USER_NOT_ADMIN_CODE = 8005;
+    public static final String LOGIN_USER_NOT_ADMIN = "非管理员登录";
+
     public static final Integer REGISTER_USER_FORMAT_ERROR_CODE = 9000;
     public static final String REGISTER_USER_USERNAME_NULL = "昵称不能为空";
     public static final String REGISTER_USER_USERNAME_LENGTH = "昵称长度错误";

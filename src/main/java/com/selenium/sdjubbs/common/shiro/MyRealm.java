@@ -7,6 +7,7 @@ import java.util.Set;
 import com.selenium.sdjubbs.common.bean.User;
 import com.selenium.sdjubbs.common.service.UserService;
 import com.selenium.sdjubbs.common.util.MD5Util;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -30,9 +31,10 @@ import org.springframework.stereotype.Component;
  * @description: 所有与数据库有关的安全数据应该封装到Realm中, 需要查询数据库并得到正确的数据
  */
 @Component
+@Slf4j
 public class MyRealm extends AuthorizingRealm {
     @Autowired
-    UserService UserService;
+    UserService userService;
 
     /*
      * (non-Javadoc)
@@ -60,14 +62,15 @@ public class MyRealm extends AuthorizingRealm {
         // 3.查询数据库看是否存在指定的用户名和密码
         try {
             //这里以后从数据库中查
-            User user = UserService.getUserByUsername(username);
-            String salt = user.getSalt();
-            String realPassword = MD5Util.dbEncryption(user.getPassword(), salt);
+            User user = userService.getUserByUsername(username);
             Object principal = user.getUsername();// 用户
-            Object credentials = realPassword;// 密码
+            Object credentials = user.getPassword();// 密码
             String realmName = this.getName();
+            log.info("realName: " + realmName);
             info = new SimpleAuthenticationInfo(principal, credentials, realmName);
+            log.info("authentication info: " + info);
         } catch (Exception e) {
+            System.out.println("doGetAuthenticationInfo exception");
             e.printStackTrace();
         }
         // 4.如果查询到了,封装查询结果,返回给我们调用
@@ -76,17 +79,19 @@ public class MyRealm extends AuthorizingRealm {
     }
 
     /**
-     * @param principals  登录的用户名
+     * @param principals 登录的用户名
      * @return AuthorizationInfo
      * @description 认证
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+        log.info("begin authorization");
         SimpleAuthorizationInfo info = null;
         String username = principals.toString();
         Set<String> roles = new HashSet<String>();
         roles.add("admin");
         info = new SimpleAuthorizationInfo(roles);
+        log.info("authorize info: " + info);
         return info;
     }
 }

@@ -37,21 +37,13 @@ public class ShiroConfig {
         return manager;
     }
 
-    @Bean("shiroFilter")
+    @Bean
     public ShiroFilterFactoryBean shiroFilter(DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterBean = new ShiroFilterFactoryBean();
         shiroFilterBean.setSecurityManager(securityManager);
         shiroFilterBean.setLoginUrl("/admin/login");
-        shiroFilterBean.setSuccessUrl("/admin/index");
-        shiroFilterBean.setUnauthorizedUrl("/user/404");
         Map<String, String> filterRuleMap = new HashMap<>();
-
-//        filterRuleMap.put("/reousrce/**", "anon");
-//        filterRuleMap.put("/user/**", "anon");
-//        filterRuleMap.put("/admin/login", "anon");
-//        filterRuleMap.put("/admin/logout", "logout");
-//        filterRuleMap.put("/admin/**", "roles[admin]");
-//        filterRuleMap.put("/**", "authc");
+        filterRuleMap.put("/**", "anon");
         shiroFilterBean.setFilterChainDefinitionMap(filterRuleMap);
 
         return shiroFilterBean;
