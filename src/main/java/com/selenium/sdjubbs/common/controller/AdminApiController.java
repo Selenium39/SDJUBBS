@@ -1,6 +1,5 @@
 package com.selenium.sdjubbs.common.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.selenium.sdjubbs.common.api.Api;
@@ -9,17 +8,19 @@ import com.selenium.sdjubbs.common.config.SdjubbsSetting;
 import com.selenium.sdjubbs.common.service.RedisService;
 import com.selenium.sdjubbs.common.service.UserService;
 import com.selenium.sdjubbs.common.util.*;
-import com.sun.media.jfxmedia.logging.Logger;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -116,6 +117,10 @@ public class AdminApiController {
 
     @GetMapping(Api.VERIFY_CODE)
     @ApiOperation(value = "获取验证码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "width", value = "验证码图片宽", required = true, example = "180"),
+            @ApiImplicitParam(name = "height", value = "验证码图片高", required = true, example = "50"),
+    })
     public Result getVerifyCode(int width, int height, HttpServletRequest request) {
         String ip = MD5Util.md5(request.getRemoteAddr()).substring(0, 10);
         String imagePath = "/common/" + setting.getVerifyCodeSavePath().split("/common/")[1];
@@ -135,5 +140,35 @@ public class AdminApiController {
             e.printStackTrace();
         }
         return Result.success().add("img", imagePath + "/" + imageName).add("recordId", recordId);
+    }
+
+
+    @PostMapping(Api.LOGIN)
+    @ApiOperation(value = "登录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username", value = "用户名(长度:4-12)", required = true, example = "test"),
+            @ApiImplicitParam(name = "password", value = "密码(md5加密)", required = true, example = "3a42503923d841ac9b7ec83eed03b450"),
+    })
+    public Result login(String username, String password, String verifyCode, String recordId, HttpServletRequest request) {
+        String ip = MD5Util.md5(request.getRemoteAddr()).substring(0, 10);
+        String verifyCodeKey = "verifycode:" + ip + ":" + recordId;
+        String realVerifyCode = redisService.get(verifyCodeKey);
+        if (verifyCode == null || (!verifyCode.equalsIgnoreCase(realVerifyCode))) {
+            return Result.failure(Constant.VERIFY_CODE_WRONG_CODE, Constant.VERIFY_CODE_WRONG);
+        }
+        log.info("username: " + username + " password: " + password + " verifyCode: " + verifyCode + " recordId: " + recordId);
+        Subject subject = SecurityUtils.getSubject();
+        // 2.判断当前用户是否登录
+        if (subject.isAuthenticated() == false) {
+            // 3.将用户名和密码封装
+            UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+            try {
+                // 4.登录
+                subject.login(token);
+            } catch (AuthenticationException e) {
+                return Result.failure();
+            }
+        }
+        return Result.success();
     }
 }

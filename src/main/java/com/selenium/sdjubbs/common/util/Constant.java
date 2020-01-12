@@ -42,5 +42,7 @@ public class Constant {
     public static final Integer USER_INPUT_EMPTY_CODE = 4000;
     public static final String USER_INPUT_EMPTY = "输入内容为空";
 
+    public static final Integer VERIFY_CODE_WRONG_CODE = 4001;
+    public static final String VERIFY_CODE_WRONG = "验证码错误";
 
 }

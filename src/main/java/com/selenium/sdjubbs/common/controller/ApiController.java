@@ -67,6 +67,7 @@ public class ApiController {
             @ApiImplicitParam(name = "registerTime", value = "注册时间", required = false, example = "2019-09-01 23:37:49"),
             @ApiImplicitParam(name = "lastLoginTime", value = "上次登录时间", required = false, example = "2019-09-01 23:37:49"),
             @ApiImplicitParam(name = "status", value = "用户状态(0:有效,1:禁用)", required = false, example = "0"),
+            @ApiImplicitParam(name = "role", value = "用户角色(0:普通用户,1:管理员)",required = false,example = "0")
     })
     public Result register(@Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -88,6 +89,7 @@ public class ApiController {
         user.setRegisterTime(TimeUtil.getTime());
         user.setLastLoginTime(TimeUtil.getTime());
         user.setStatus(0);
+        user.setRole(0);
         try {
             userService.addUser(user);
         } catch (Exception e) {
