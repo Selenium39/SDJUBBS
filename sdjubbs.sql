@@ -11,7 +11,7 @@
  Target Server Version : 80017
  File Encoding         : 65001
 
- Date: 19/11/2019 00:54:46
+ Date: 12/01/2020 18:44:47
 */
 
 SET NAMES utf8mb4;
@@ -3087,7 +3087,7 @@ CREATE TABLE `comment`  (
   INDEX `fk_comment_user`(`user_id`) USING BTREE,
   CONSTRAINT `fk_comment_article` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_comment_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 67 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 68 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of comment
@@ -3144,6 +3144,9 @@ INSERT INTO `comment` VALUES (63, '1', '2019-10-11 03:08:11', 13, 16, 'selenium'
 INSERT INTO `comment` VALUES (64, '1', '2019-10-11 03:08:12', 13, 16, 'selenium');
 INSERT INTO `comment` VALUES (65, '1', '2019-10-13 13:10:29', 13, 16, 'selenium');
 INSERT INTO `comment` VALUES (66, '1', '2019-10-13 13:10:53', 13, 16, 'selenium');
+INSERT INTO `comment` VALUES (67, '123', '2019-11-27 00:02:41', 2890, 16, 'selenium');
+INSERT INTO `comment` VALUES (68, '1111', '2020-01-01 16:59:26', 2888, 16, 'selenium');
+INSERT INTO `comment` VALUES (69, '777', '2020-01-12 11:33:39', 13, 16, 'selenium');
 
 -- ----------------------------
 -- Table structure for reply
@@ -3165,13 +3168,19 @@ CREATE TABLE `reply`  (
   CONSTRAINT `fk_reply_comment_comment_id` FOREIGN KEY (`comment_id`) REFERENCES `comment` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_reply_user_receiver_user_id` FOREIGN KEY (`receiver_user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_reply_user_send_user_id` FOREIGN KEY (`send_user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of reply
 -- ----------------------------
-INSERT INTO `reply` VALUES (1, '111', '2019-10-11 03:17:24', 1, 37, 'zhangxiya', 16, 'selenium');
-INSERT INTO `reply` VALUES (2, '111', '2019-10-13 12:17:33', 1, 37, 'zhangxiya', 16, 'selenium');
+INSERT INTO `reply` VALUES (1, '111', '2019-10-11 03:17:24', 1, 16, 'selenium', 37, 'zhangxiya');
+INSERT INTO `reply` VALUES (2, '111', '2019-10-13 12:17:33', 1, 16, 'selenium', 37, 'zhangxiya');
+INSERT INTO `reply` VALUES (3, '111', '2019-11-19 20:29:02', 2, 37, 'zhangxiya', 37, 'zhangxiya');
+INSERT INTO `reply` VALUES (4, '7777777', '2019-11-26 19:17:40', 66, 16, 'selenium', 16, 'selenium');
+INSERT INTO `reply` VALUES (5, '7777777', '2019-11-26 19:19:53', 1, 16, 'selenium', 37, 'zhangxiya');
+INSERT INTO `reply` VALUES (6, '88888888', '2019-11-26 19:22:20', 3, 16, 'selenium', 16, 'selenium');
+INSERT INTO `reply` VALUES (7, '123', '2019-11-27 00:02:47', 67, 16, 'selenium', 16, 'selenium');
+INSERT INTO `reply` VALUES (8, '1111', '2020-01-12 11:33:52', 69, 16, 'selenium', 16, 'selenium');
 
 -- ----------------------------
 -- Table structure for user
@@ -3190,30 +3199,28 @@ CREATE TABLE `user`  (
   `register_time` datetime(0) NOT NULL,
   `last_login_time` datetime(0) NOT NULL,
   `status` tinyint(1) NOT NULL COMMENT 'o代表可以用户有效,1代表用户被禁用',
+  `role` tinyint(1) NOT NULL COMMENT '0代表普通用户,1代表管理员',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `unique_index_email`(`email`) USING BTREE COMMENT 'email必须唯一',
   UNIQUE INDEX `unique_index_username`(`username`) USING BTREE COMMENT 'username必须唯一'
-) ENGINE = InnoDB AUTO_INCREMENT = 51 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 55 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (16, 'selenium', '3a42503923d841ac9b7ec83eed03b450', '1d2d383-f', 0, 2, '895484122@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-01 23:37:49', '2019-09-01 23:37:49', 0);
-INSERT INTO `user` VALUES (18, 'wa11', 'a67b45bb436f5c8381da277f7e952d02', '50d62df-5', 0, 2, '895484122111@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-04 21:58:18', '2019-09-04 21:58:18', 0);
-INSERT INTO `user` VALUES (29, '23444444', 'e146c0d93aefe07f571292a504818331', '34d474c-9', 0, 2, '895484122111@qq.com2', '00000000000', '/common/images/0.jpg', '2019-09-04 23:04:53', '2019-09-04 23:04:53', 0);
-INSERT INTO `user` VALUES (36, '1234', '4d88a64bd0151dffd3d466ba545a7590', 'b8c559b-0', 0, 2, '895484122123123123@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-05 00:30:01', '2019-09-05 00:30:01', 0);
-INSERT INTO `user` VALUES (37, 'zhangxiya', 'e7035ecc1b8923d3fe87f184d14b09c6', '7d47119-a', 0, 2, 'zhangxiya@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-05 00:41:02', '2019-09-05 00:41:02', 0);
-INSERT INTO `user` VALUES (38, 'wangjuan', '928a7dc0e88983436dfcf5f8eb9d9628', 'd84b169-a', 0, 2, 'wangjuan@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-05 00:46:29', '2019-09-05 00:46:29', 0);
-INSERT INTO `user` VALUES (40, 'wantao9898', 'edf9e9ba357413169f3c9c9f1469a735', '11a0fbf-e', 0, 2, '8954841221212111@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-07 12:14:36', '2019-09-07 12:14:36', 0);
-INSERT INTO `user` VALUES (41, 'wanta312', '3b0be1df6f28465d6155d62ee254867a', 'caf899f-7', 0, 2, '895484122111@qq.com23123', '00000000000', '/common/images/0.jpg', '2019-09-07 12:59:45', '2019-09-07 12:59:45', 0);
-INSERT INTO `user` VALUES (43, 'selenium1', '8f4edeadbaad0deb039249e824a36fe2', '48aca90-2', 0, 2, '343242342@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-07 21:24:49', '2019-09-07 21:24:49', 0);
-INSERT INTO `user` VALUES (44, '3123123', 'fc18e58236dab5c9b4fd5f821ef14b28', '49d5dc9-2', 0, 2, '2132121313@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-07 21:32:29', '2019-09-07 21:32:29', 0);
-INSERT INTO `user` VALUES (45, 'wantao12312', 'b9eb515b39ad8cac1acd355d67198d6e', '18152e5-4', 0, 2, '895484122@qq.comdasd', '00000000000', '/common/images/0.jpg', '2019-09-07 21:34:35', '2019-09-07 21:34:35', 0);
-INSERT INTO `user` VALUES (46, 'selenium231', '2d9a97fa7c1d0c8496cf4b4998c699da', '441e2d5-4', 0, 2, '895484122@qq.com2313', '00000000000', '/common/images/0.jpg', '2019-09-07 21:38:36', '2019-09-07 21:38:36', 0);
-INSERT INTO `user` VALUES (47, 'selenium123', 'e4b5eb111e98a3355c0d6a5dd255bf91', 'fae4b34-2', 0, 2, '89548412123122@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-07 21:47:27', '2019-09-07 21:47:27', 0);
-INSERT INTO `user` VALUES (48, 'test', '5cb1fe62b65a3d8dcf1d124c4226a13d', 'da19a6c-a', 0, 2, 'test@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-13 16:57:11', '2019-09-13 16:57:11', 0);
-INSERT INTO `user` VALUES (49, 'selenium222', '9cafb14e25927ce21944da04f31b057a', '3ff3494-5', 0, 2, '895484122222@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-21 10:53:15', '2019-09-21 10:53:15', 0);
-INSERT INTO `user` VALUES (50, 'aaaa', '0977f9ab7e9653f2a5b0792c715dc603', '53bf7ee-2', 0, 2, '897632122@qq.com', '00000000000', '/common/images/0.jpg', '2019-10-01 12:10:01', '2019-10-01 12:10:01', 0);
-INSERT INTO `user` VALUES (51, 'aaaa1', '73021ad0ac074040aeae05831443330b', 'c4b4a20-c', 0, 2, '2132222@qq.com', '00000000000', '/common/images/0.jpg', '2019-10-01 12:11:58', '2019-10-01 12:11:58', 0);
+INSERT INTO `user` VALUES (16, 'selenium', '3a42503923d841ac9b7ec83eed03b450', '1d2d383-f', 20, 1, '895484122@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-01 23:37:49', '2019-09-01 23:37:49', 0, 1);
+INSERT INTO `user` VALUES (29, '23444444', 'e146c0d93aefe07f571292a504818331', '34d474c-9', 0, 2, '895484122111@qq.com2', '00000000000', '/common/images/0.jpg', '2019-09-04 23:04:53', '2019-09-04 23:04:53', 0, 0);
+INSERT INTO `user` VALUES (36, '1234', '4d88a64bd0151dffd3d466ba545a7590', 'b8c559b-0', 0, 2, '895484122123123123@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-05 00:30:01', '2019-09-05 00:30:01', 0, 0);
+INSERT INTO `user` VALUES (37, 'zhangxiya', 'e7035ecc1b8923d3fe87f184d14b09c6', '7d47119-a', 0, 2, 'zhangxiya@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-05 00:41:02', '2019-09-05 00:41:02', 0, 0);
+INSERT INTO `user` VALUES (38, 'wangjuan', '928a7dc0e88983436dfcf5f8eb9d9628', 'd84b169-a', 0, 2, 'wangjuan@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-05 00:46:29', '2019-09-05 00:46:29', 0, 0);
+INSERT INTO `user` VALUES (40, 'wantao9898', 'edf9e9ba357413169f3c9c9f1469a735', '11a0fbf-e', 0, 2, '8954841221212111@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-07 12:14:36', '2019-09-07 12:14:36', 0, 0);
+INSERT INTO `user` VALUES (41, 'wanta312', '3b0be1df6f28465d6155d62ee254867a', 'caf899f-7', 0, 2, '895484122111@qq.com23123', '00000000000', '/common/images/0.jpg', '2019-09-07 12:59:45', '2019-09-07 12:59:45', 0, 0);
+INSERT INTO `user` VALUES (43, 'selenium1', '8f4edeadbaad0deb039249e824a36fe2', '48aca90-2', 0, 2, '343242342@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-07 21:24:49', '2019-09-07 21:24:49', 0, 0);
+INSERT INTO `user` VALUES (44, '3123123', 'fc18e58236dab5c9b4fd5f821ef14b28', '49d5dc9-2', 0, 2, '2132121313@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-07 21:32:29', '2019-09-07 21:32:29', 0, 0);
+INSERT INTO `user` VALUES (46, 'selenium231', '2d9a97fa7c1d0c8496cf4b4998c699da', '441e2d5-4', 0, 2, '895484122@qq.com2313', '00000000000', '/common/images/0.jpg', '2019-09-07 21:38:36', '2019-09-07 21:38:36', 0, 0);
+INSERT INTO `user` VALUES (47, 'selenium123', 'e4b5eb111e98a3355c0d6a5dd255bf91', 'fae4b34-2', 0, 2, '89548412123122@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-07 21:47:27', '2019-09-07 21:47:27', 0, 0);
+INSERT INTO `user` VALUES (49, 'selenium222', '9cafb14e25927ce21944da04f31b057a', '3ff3494-5', 0, 2, '895484122222@qq.com', '00000000000', '/common/images/0.jpg', '2019-09-21 10:53:15', '2019-09-21 10:53:15', 1, 0);
+INSERT INTO `user` VALUES (50, 'aaaa', '0977f9ab7e9653f2a5b0792c715dc603', '53bf7ee-2', 0, 2, '897632122@qq.com', '00000000000', '/common/images/0.jpg', '2019-10-01 12:10:01', '2019-10-01 12:10:01', 1, 0);
+INSERT INTO `user` VALUES (51, 'aaaa1', '73021ad0ac074040aeae05831443330b', 'c4b4a20-c', 0, 2, '2132222@qq.com', '00000000000', '/common/images/0.jpg', '2019-10-01 12:11:58', '2019-10-01 12:11:58', 1, 0);
 
 SET FOREIGN_KEY_CHECKS = 1;
