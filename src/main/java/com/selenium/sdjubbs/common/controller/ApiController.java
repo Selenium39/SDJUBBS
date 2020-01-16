@@ -18,6 +18,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
@@ -112,7 +113,8 @@ public class ApiController {
             @ApiImplicitParam(name = "username", value = "用户名(长度:4-12)", required = true, example = "test"),
             @ApiImplicitParam(name = "password", value = "密码(md5加密)", required = true, example = "3a42503923d841ac9b7ec83eed03b450"),
     })
-    public Result login(String username, String password, HttpSession session) {
+    public Result login(String username, String password, HttpSession session, HttpServletRequest request) {
+        String ip = request.getRemoteAddr();
         User user = userService.getUserByUsername(username);
         if (user != null) {
             if (user.getStatus() == 1) {
@@ -121,8 +123,10 @@ public class ApiController {
             String salt = user.getSalt();
             String realPassword = MD5Util.dbEncryption(password, salt);
             if (password != null && salt != null && realPassword.equals(user.getPassword())) {
-                //存入redis key:username value: sessionId
-                redisService.set("user:name:"+username, session.getId());
+                //存入redis key:username value: md5(ip+sessionId)
+                //value加入ip是为了防止别人拿到sessionId
+                String redisValue=MD5Util.md5(ip+session.getId());
+                redisService.set("user:name:"+username, redisValue);
                 return Result.success().add("username", username).add("sessionId", session.getId());
             } else {
                 return Result.failure(Constant.FAILURE_CODE, Constant.LOGIN_USER_WRONG_PASSWORD_CODE, Constant.LOGIN_USER_WRONG_PASSWORD);
@@ -144,7 +148,7 @@ public class ApiController {
             @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
     })
     protected Result logout(String username, String sessionId) {
-        if (redisService.delete(username)) {
+        if (redisService.delete("user:name:"+username)) {
             return Result.success();
         } else {
             return Result.failure();

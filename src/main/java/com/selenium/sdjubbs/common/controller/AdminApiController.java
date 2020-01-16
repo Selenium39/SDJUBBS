@@ -41,11 +41,13 @@ public class AdminApiController {
     @GetMapping(Api.USER)
     @ApiOperation(value = "获取所有的用户")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "username", value = "用户名(长度:4-12)", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
             @ApiImplicitParam(name = "page", value = "页数", required = true, example = "1"),
             @ApiImplicitParam(name = "limit", value = "每页记录数", required = true, example = "10"),
             @ApiImplicitParam(name = "order", value = "排序", required = false, example = "id asc"),
     })
-    public Result getAllUser(String page, String limit, String order) {
+    protected Result getAllUser(String username, String sessionId, String page, String limit, String order) {
         int pageSize = 0;
         int pageNum = 0;
         try {
@@ -69,6 +71,8 @@ public class AdminApiController {
     @PutMapping(Api.USER + "/{id}")
     @ApiOperation(value = "修改用户")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "username", value = "用户名(长度:4-12)", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
             @ApiImplicitParam(name = "id", value = "用户id", required = true, example = "1"),
             @ApiImplicitParam(name = "username", value = "用户名(长度:4-12)", required = false, example = "test"),
             @ApiImplicitParam(name = "password", value = "密码(md5加密)", required = false, example = "3a42503923d841ac9b7ec83eed03b450"),
@@ -82,7 +86,7 @@ public class AdminApiController {
             @ApiImplicitParam(name = "lastLoginTime", value = "上次登录时间", required = false, example = "2019-09-01 23:37:49"),
             @ApiImplicitParam(name = "status", value = "用户状态(0:有效,1:禁用)", required = false, example = "0"),
     })
-    public Result updateUser(@PathVariable Integer id, User user) {
+    protected Result updateUser(String username, String sessionId, @PathVariable Integer id, User user) {
         Integer count = 0;
         try {
             count = userService.updateUser(user);
@@ -99,9 +103,11 @@ public class AdminApiController {
     @DeleteMapping(Api.USER + "/{id}")
     @ApiOperation(value = "删除用户")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "username", value = "用户名(长度:4-12)", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
             @ApiImplicitParam(name = "id", value = "用户id", required = true, example = "1"),
     })
-    public Result deleteUser(@PathVariable Integer id) {
+    protected Result deleteUser(String username, String sessionId, @PathVariable Integer id) {
         Integer count = 0;
         try {
             count = userService.deleteUser(id);
@@ -177,9 +183,10 @@ public class AdminApiController {
             // 登录
             subject.login(token);
             log.info("login success");
-            //存入redis key:username value: sessionId
-            redisService.set("user:name:" + username, session.getId());
-            return Result.success().add("username", username).add("sessionId", session.getId());
+            //存入redis key:username value: md5(ip+sessionId)
+            String sessionId = session.getId();
+            redisService.set("admin:name:" + username, MD5Util.md5(request.getRemoteAddr() + sessionId));
+            return Result.success().add("username", username).add("sessionId", sessionId);
 
         } catch (AuthenticationException e) {
             log.info("login failure");

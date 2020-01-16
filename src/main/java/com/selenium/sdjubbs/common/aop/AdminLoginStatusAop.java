@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 @Aspect
 @Component
 @Slf4j
-public class LoginStatusAop {
+public class AdminLoginStatusAop {
     @Autowired
     private RedisService redisService;
 
@@ -35,12 +35,12 @@ public class LoginStatusAop {
             String sessionId = args[1].toString();
             log.info("username:" + username);
             log.info("sessionId:" + sessionId);
-            String realSessionId = redisService.get("user:name:" + username);
+            String realSessionId = redisService.get("admin:name:" + username);
             //value加入ip是为了防止别人拿到sessionId
             sessionId = MD5Util.md5(ip + sessionId);
             if (realSessionId != null && sessionId.equals(realSessionId)) {
                 return pjp.proceed();
-            } else {
+            }else{
                 return Result.failure(Constant.FAILURE_CODE, Constant.LOGIN_USER_IDLE_CODE, Constant.LOGIN_USER_IDLE);
             }
         } catch (Exception e) {
@@ -50,8 +50,7 @@ public class LoginStatusAop {
         }
     }
 
-    @Pointcut("execution(protected * com.selenium.sdjubbs.common.controller.ApiController.*(..))")
+    @Pointcut("execution(protected * com.selenium.sdjubbs.common.controller.AdminApiController.*(..))")
     public void doApi() {
     }
-
 }
