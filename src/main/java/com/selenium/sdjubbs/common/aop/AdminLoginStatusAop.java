@@ -31,11 +31,11 @@ public class AdminLoginStatusAop {
         log.info("请求ip: " + ip);
         try {
             Object[] args = pjp.getArgs();
-            String username = args[0].toString();
+            String name = args[0].toString();
             String sessionId = args[1].toString();
-            log.info("username:" + username);
+            log.info("name:" + name);
             log.info("sessionId:" + sessionId);
-            String realSessionId = redisService.get("admin:name:" + username);
+            String realSessionId = redisService.get("admin:name:" + name);
             //value加入ip是为了防止别人拿到sessionId
             sessionId = MD5Util.md5(ip + sessionId);
             if (realSessionId != null && sessionId.equals(realSessionId)) {

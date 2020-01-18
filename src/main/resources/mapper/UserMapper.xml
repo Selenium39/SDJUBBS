@@ -27,6 +27,9 @@
     <update id="updateUser" parameterType="User">
         update user
         <set>
+            <if test="id!=null">
+                id = #{id}.
+            </if>
             <if test="username!=null">
                 username = #{username},
             </if>

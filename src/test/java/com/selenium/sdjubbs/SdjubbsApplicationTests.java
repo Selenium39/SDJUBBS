@@ -3,9 +3,11 @@ package com.selenium.sdjubbs;
 import com.selenium.sdjubbs.common.bean.Article;
 import com.selenium.sdjubbs.common.bean.Comment;
 import com.selenium.sdjubbs.common.bean.Reply;
+import com.selenium.sdjubbs.common.bean.User;
 import com.selenium.sdjubbs.common.service.ArticleService;
 import com.selenium.sdjubbs.common.service.CommentService;
 import com.selenium.sdjubbs.common.service.ReplyService;
+import com.selenium.sdjubbs.common.service.UserService;
 import com.selenium.sdjubbs.common.util.TimeUtil;
 import com.selenium.sdjubbs.common.util.VerifyCodeUtil;
 import org.junit.Test;
@@ -28,26 +30,28 @@ public class SdjubbsApplicationTests {
     private CommentService commentService;
     @Autowired
     private ReplyService replyService;
+    @Autowired
+    private UserService userService;
 
     @Test
-    public void insertArticle(){
-          for(int i=0;i<1000;i++){
-              Article article=new Article();
-              article.setTitle("文章标题"+UUID.randomUUID().toString().substring(0,6));
-              article.setContent("文章内容"+UUID.randomUUID().toString().substring(0,10));
-              article.setAuthorId(16);
-              article.setAuthorName("selenium");
-              article.setBlockId(1);
-              article.setBlockName("1111");
-              article.setCreateTime(TimeUtil.getTime());
-              article.setPriority(0);
-              articleService.addArticle(article);
+    public void insertArticle() {
+        for (int i = 0; i < 1000; i++) {
+            Article article = new Article();
+            article.setTitle("文章标题" + UUID.randomUUID().toString().substring(0, 6));
+            article.setContent("文章内容" + UUID.randomUUID().toString().substring(0, 10));
+            article.setAuthorId(16);
+            article.setAuthorName("selenium");
+            article.setBlockId(1);
+            article.setBlockName("1111");
+            article.setCreateTime(TimeUtil.getTime());
+            article.setPriority(0);
+            articleService.addArticle(article);
 
-          }
+        }
     }
 
     @Test
-    public void insertReply(){
+    public void insertReply() {
         Reply reply = new Reply();
         reply.setContent("111");
         reply.setCommentId(1);
@@ -61,6 +65,13 @@ public class SdjubbsApplicationTests {
 
     @Test
     public void createVerifyCode() throws IOException {
-         VerifyCodeUtil.drawVerifyCode(200, 50, System.getProperty("user.dir")+"\\src\\main\\resources\\static\\common\\images\\verifycode","test");
+        VerifyCodeUtil.drawVerifyCode(200, 50, System.getProperty("user.dir") + "\\src\\main\\resources\\static\\common\\images\\verifycode", "test");
+    }
+
+    @Test
+    public void updateUser() {
+        User user = new User();
+        user.setId(50);
+        userService.updateUser(user);
     }
 }

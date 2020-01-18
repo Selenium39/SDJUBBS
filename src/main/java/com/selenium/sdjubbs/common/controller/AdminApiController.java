@@ -18,6 +18,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -41,13 +42,13 @@ public class AdminApiController {
     @GetMapping(Api.USER)
     @ApiOperation(value = "获取所有的用户")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", value = "用户名(长度:4-12)", required = true, example = "test"),
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
             @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
             @ApiImplicitParam(name = "page", value = "页数", required = true, example = "1"),
             @ApiImplicitParam(name = "limit", value = "每页记录数", required = true, example = "10"),
             @ApiImplicitParam(name = "order", value = "排序", required = false, example = "id asc"),
     })
-    protected Result getAllUser(String username, String sessionId, String page, String limit, String order) {
+    protected Result getAllUser(String name, String sessionId, String page, String limit, String order) {
         int pageSize = 0;
         int pageNum = 0;
         try {
@@ -71,7 +72,7 @@ public class AdminApiController {
     @PutMapping(Api.USER + "/{id}")
     @ApiOperation(value = "修改用户")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", value = "用户名(长度:4-12)", required = true, example = "test"),
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
             @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
             @ApiImplicitParam(name = "id", value = "用户id", required = true, example = "1"),
             @ApiImplicitParam(name = "username", value = "用户名(长度:4-12)", required = false, example = "test"),
@@ -86,7 +87,11 @@ public class AdminApiController {
             @ApiImplicitParam(name = "lastLoginTime", value = "上次登录时间", required = false, example = "2019-09-01 23:37:49"),
             @ApiImplicitParam(name = "status", value = "用户状态(0:有效,1:禁用)", required = false, example = "0"),
     })
-    protected Result updateUser(String username, String sessionId, @PathVariable Integer id, User user) {
+    protected Result updateUser(String name, String sessionId, @PathVariable Integer id, User user, MultipartFile file) {
+        log.info("update user: " + user);
+        if (file != null) {
+            log.info("file: " + file.getName());
+        }
         Integer count = 0;
         try {
             count = userService.updateUser(user);
@@ -103,11 +108,11 @@ public class AdminApiController {
     @DeleteMapping(Api.USER + "/{id}")
     @ApiOperation(value = "删除用户")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", value = "用户名(长度:4-12)", required = true, example = "test"),
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
             @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
             @ApiImplicitParam(name = "id", value = "用户id", required = true, example = "1"),
     })
-    protected Result deleteUser(String username, String sessionId, @PathVariable Integer id) {
+    protected Result deleteUser(String name, String sessionId, @PathVariable Integer id) {
         Integer count = 0;
         try {
             count = userService.deleteUser(id);

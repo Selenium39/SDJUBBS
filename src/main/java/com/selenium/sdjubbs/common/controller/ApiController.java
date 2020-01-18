@@ -32,7 +32,7 @@ import java.util.UUID;
 @RequestMapping("/api")
 @Slf4j
 @CrossOrigin(allowCredentials = "true", allowedHeaders = "*")
-@io.swagger.annotations.Api(value = "SDJUBBS API",tags = "SDJUBBS API")
+@io.swagger.annotations.Api(value = "SDJUBBS API", tags = "SDJUBBS API")
 public class ApiController {
     @Autowired
     private UserService userService;
@@ -68,7 +68,7 @@ public class ApiController {
             @ApiImplicitParam(name = "registerTime", value = "注册时间", required = false, example = "2019-09-01 23:37:49"),
             @ApiImplicitParam(name = "lastLoginTime", value = "上次登录时间", required = false, example = "2019-09-01 23:37:49"),
             @ApiImplicitParam(name = "status", value = "用户状态(0:有效,1:禁用)", required = false, example = "0"),
-            @ApiImplicitParam(name = "role", value = "用户角色(0:普通用户,1:管理员)",required = false,example = "0")
+            @ApiImplicitParam(name = "role", value = "用户角色(0:普通用户,1:管理员)", required = false, example = "0")
     })
     public Result register(@Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -125,8 +125,8 @@ public class ApiController {
             if (password != null && salt != null && realPassword.equals(user.getPassword())) {
                 //存入redis key:username value: md5(ip+sessionId)
                 //value加入ip是为了防止别人拿到sessionId
-                String redisValue=MD5Util.md5(ip+session.getId());
-                redisService.set("user:name:"+username, redisValue);
+                String redisValue = MD5Util.md5(ip + session.getId());
+                redisService.set("user:name:" + username, redisValue);
                 return Result.success().add("username", username).add("sessionId", session.getId());
             } else {
                 return Result.failure(Constant.FAILURE_CODE, Constant.LOGIN_USER_WRONG_PASSWORD_CODE, Constant.LOGIN_USER_WRONG_PASSWORD);
@@ -144,11 +144,11 @@ public class ApiController {
     @PostMapping(Api.LOGOUT)
     @ApiOperation(value = "退出")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", value = "用户名(长度:4-12)", required = true, example = "test"),
+            @ApiImplicitParam(name = "name", value = "登录凭证", required = true, example = "test"),
             @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
     })
-    protected Result logout(String username, String sessionId) {
-        if (redisService.delete("user:name:"+username)) {
+    protected Result logout(String name, String sessionId) {
+        if (redisService.delete("user:name:" + name)) {
             return Result.success();
         } else {
             return Result.failure();
@@ -226,7 +226,7 @@ public class ApiController {
     @PostMapping(Api.COMMENT)
     @ApiOperation(value = "增加一条评论")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", value = "用户名(长度:4-12)", required = true, example = "test"),
+            @ApiImplicitParam(name = "user", value = "登录凭证", required = true, example = "test"),
             @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
             @ApiImplicitParam(name = "id", value = "评论id", required = false, example = "1"),
             @ApiImplicitParam(name = "content", value = "评论内容", required = true, example = "content"),
@@ -235,13 +235,13 @@ public class ApiController {
             @ApiImplicitParam(name = "userId", value = "用户id", required = false, example = "1"),
             @ApiImplicitParam(name = "userName", value = "必须与username一致", required = true, example = "test"),
     })
-    protected Result addComment(String username, String sessionId, Comment comment) {
+    protected Result addComment(String name, String sessionId, Comment comment) {
         if (comment.getContent().trim() == null || comment.getContent().trim().length() == 0 || comment.getContent().trim().equals(" ")) {
             return Result.failure(Constant.USER_INPUT_EMPTY_CODE, Constant.USER_INPUT_EMPTY);
         }
         comment.setContent(HtmlUtil.htmlFilter(comment.getContent()));
         comment.setCreateTime(TimeUtil.getTime());
-        comment.setUserId(userService.getUserByUsername(username).getId());
+        comment.setUserId(userService.getUserByUsername(comment.getUserName()).getId());
         commentService.addComment(comment);
         return Result.success().add("comment", comment);
     }
@@ -254,7 +254,7 @@ public class ApiController {
     @PostMapping(Api.REPLY)
     @ApiOperation(value = "增加一条回复")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", value = "用户名(长度:4-12)", required = true, example = "test"),
+            @ApiImplicitParam(name = "name", value = "登录凭证", required = true, example = "test"),
             @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
             @ApiImplicitParam(name = "id", value = "回复id", required = false, example = "1"),
             @ApiImplicitParam(name = "content", value = "回复内容", required = true, example = "content"),
@@ -264,7 +264,7 @@ public class ApiController {
             @ApiImplicitParam(name = "sendUserId", value = "发送回复人的id", required = true, example = "1"),
             @ApiImplicitParam(name = "sendUserName", value = "发送回复人的姓名", required = true, example = "test"),
     })
-    protected Result addReply(String username, String sessionId, Reply reply) {
+    protected Result addReply(String name, String sessionId, Reply reply) {
         if (reply.getContent() == null || reply.getContent().trim().length() == 0 || reply.getContent().trim().equals(" ")) {
             return Result.failure(Constant.USER_INPUT_EMPTY_CODE, Constant.USER_INPUT_EMPTY);
         }
