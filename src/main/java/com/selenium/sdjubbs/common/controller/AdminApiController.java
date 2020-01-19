@@ -93,7 +93,7 @@ public class AdminApiController {
             String savePath = PhotoUtil.saveFile(file, setting.getAvatarSavePath()).split("/static")[1];
             user.setHeadPicture(savePath);
         }
-        if (!user.getPassword().isEmpty()) {
+        if (user.getPassword() != null) {
             //通过MD5+随机salt加密写入数据库的密码
             String salt = UUID.randomUUID().toString().substring(1, 10);
             user.setSalt(salt);
@@ -112,6 +112,36 @@ public class AdminApiController {
         }
         return Result.success();
     }
+
+    @PostMapping(Api.USER)
+    @ApiOperation(value = "新增用户")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+            @ApiImplicitParam(name = "username", value = "用户名(长度:4-12)", required = false, example = "test"),
+            @ApiImplicitParam(name = "password", value = "密码(md5加密)", required = false, example = "3a42503923d841ac9b7ec83eed03b450"),
+            @ApiImplicitParam(name = "age", value = "年龄", required = false, example = "0"),
+            @ApiImplicitParam(name = "gender", value = "性别(0:男,1:女,2:未知)", required = false, example = "2"),
+            @ApiImplicitParam(name = "email", value = "邮箱", required = false, example = "895484122@qq.com"),
+            @ApiImplicitParam(name = "phone", value = "手机号", required = false, example = "00000000000"),
+            @ApiImplicitParam(name = "headPicture", value = "头像", required = false, example = "/common/images/avatar/default.jpg"),
+    })
+    protected Result addUser(String name, String sessionId, User user, @RequestParam(value = "file", required = false) MultipartFile file) {
+        log.info("add user: " + user);
+        if (file != null) {
+            String savePath = PhotoUtil.saveFile(file, setting.getAvatarSavePath()).split("/static")[1];
+            user.setHeadPicture(savePath);
+        }
+        if (user.getPassword() != null) {
+            //通过MD5+随机salt加密写入数据库的密码
+            String salt = UUID.randomUUID().toString().substring(1, 10);
+            user.setSalt(salt);
+            String password = MD5Util.dbEncryption(user.getPassword(), salt);
+            user.setPassword(password);
+        }
+        return Result.success();
+    }
+
 
     @DeleteMapping(Api.USER + "/{id}")
     @ApiOperation(value = "删除用户")
@@ -144,8 +174,7 @@ public class AdminApiController {
         String ip = MD5Util.md5(request.getRemoteAddr()).substring(0, 10);
         String imagePath = "/common/" + setting.getVerifyCodeSavePath().split("/common/")[1];
         String savePath = System.getProperty("user.dir") + setting.getVerifyCodeSavePath();
-        //todo FileUtil忘记提交了
-        // FileUtil.deleteFilesWithPrefix(savePath, ip);
+        FileUtil.deleteFilesWithPrefix(savePath, ip);
         String imageName = ip + "_" + System.currentTimeMillis();
         String verifyCode = "";
         String recordId = "";

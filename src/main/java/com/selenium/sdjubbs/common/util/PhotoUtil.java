@@ -94,25 +94,25 @@ public class PhotoUtil {
      * @param filedata 文件数据 返回图片位置
      */
     public static String saveFile(MultipartFile filedata, String pathval) {
-        File fileDir = new File(pathval);
-        if (!fileDir.exists()) {
-            fileDir.mkdirs();
-        }
-        // 上传的文件名
-        String filename = System.currentTimeMillis() + "_" + filedata.getOriginalFilename();
-        // 总的文件路径
-        String filePath = pathval + "/" + filename;
-        File file = new File(System.getProperty("user.dir") + "/" + filePath);
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            // 写入文件
-            out.write(filedata.getBytes());
-            out.flush();
-            out.close();
-            return filePath;// 返回图片保存路径
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    File fileDir = new File(pathval);
+    if (!fileDir.exists()) {
+        fileDir.mkdirs();
     }
+    // 上传的文件名
+    String filename = System.currentTimeMillis() + "_" + filedata.getOriginalFilename();
+    // 总的文件路径
+    String filePath = pathval + "/" + filename;
+    File file = new File(System.getProperty("user.dir") + "/" + filePath);
+    try {
+        FileOutputStream out = new FileOutputStream(file);
+        // 写入文件
+        out.write(filedata.getBytes());
+        out.flush();
+        out.close();
+        return filePath;// 返回图片保存路径
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return null;
+}
 }
