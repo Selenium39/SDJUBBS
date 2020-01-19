@@ -28,13 +28,13 @@ public class AdminLoginStatusAop {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         String ip = request.getRemoteAddr();
-        log.info("请求ip: " + ip);
+        //log.info("请求ip: " + ip);
         try {
             Object[] args = pjp.getArgs();
             String name = args[0].toString();
             String sessionId = args[1].toString();
-            log.info("name:" + name);
-            log.info("sessionId:" + sessionId);
+          //  log.info("name:" + name);
+           // log.info("sessionId:" + sessionId);
             String realSessionId = redisService.get("admin:name:" + name);
             //value加入ip是为了防止别人拿到sessionId
             sessionId = MD5Util.md5(ip + sessionId);
