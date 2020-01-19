@@ -28,7 +28,7 @@
         update user
         <set>
             <if test="id!=null">
-                id = #{id}.
+                id = #{id},
             </if>
             <if test="username!=null">
                 username = #{username},

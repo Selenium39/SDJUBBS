@@ -82,15 +82,23 @@ public class AdminApiController {
             @ApiImplicitParam(name = "gender", value = "性别(0:男,1:女,2:未知)", required = false, example = "2"),
             @ApiImplicitParam(name = "email", value = "邮箱", required = false, example = "895484122@qq.com"),
             @ApiImplicitParam(name = "phone", value = "手机号", required = false, example = "00000000000"),
-            @ApiImplicitParam(name = "headPicture", value = "头像", required = false, example = "/common/images/0.jpg"),
+            @ApiImplicitParam(name = "headPicture", value = "头像", required = false, example = "/common/images/avatar/default.jpg"),
             @ApiImplicitParam(name = "registerTime", value = "注册时间", required = false, example = "2019-09-01 23:37:49"),
             @ApiImplicitParam(name = "lastLoginTime", value = "上次登录时间", required = false, example = "2019-09-01 23:37:49"),
             @ApiImplicitParam(name = "status", value = "用户状态(0:有效,1:禁用)", required = false, example = "0"),
     })
-    protected Result updateUser(String name, String sessionId, @PathVariable Integer id, User user, MultipartFile file) {
+    protected Result updateUser(String name, String sessionId, @PathVariable Integer id, User user, @RequestParam(value = "file", required = false) MultipartFile file) {
         log.info("update user: " + user);
         if (file != null) {
-            log.info("file: " + file.getName());
+            String savePath = PhotoUtil.saveFile(file, setting.getAvatarSavePath()).split("/static")[1];
+            user.setHeadPicture(savePath);
+        }
+        if (!user.getPassword().isEmpty()) {
+            //通过MD5+随机salt加密写入数据库的密码
+            String salt = UUID.randomUUID().toString().substring(1, 10);
+            user.setSalt(salt);
+            String password = MD5Util.dbEncryption(user.getPassword(), salt);
+            user.setPassword(password);
         }
         Integer count = 0;
         try {
@@ -136,7 +144,8 @@ public class AdminApiController {
         String ip = MD5Util.md5(request.getRemoteAddr()).substring(0, 10);
         String imagePath = "/common/" + setting.getVerifyCodeSavePath().split("/common/")[1];
         String savePath = System.getProperty("user.dir") + setting.getVerifyCodeSavePath();
-        FileUtil.deleteFilesWithPrefix(savePath, ip);
+        //todo FileUtil忘记提交了
+        // FileUtil.deleteFilesWithPrefix(savePath, ip);
         String imageName = ip + "_" + System.currentTimeMillis();
         String verifyCode = "";
         String recordId = "";

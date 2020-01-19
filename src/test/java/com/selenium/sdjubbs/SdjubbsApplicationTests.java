@@ -72,6 +72,7 @@ public class SdjubbsApplicationTests {
     public void updateUser() {
         User user = new User();
         user.setId(50);
+        user.setStatus(0);
         userService.updateUser(user);
     }
 }

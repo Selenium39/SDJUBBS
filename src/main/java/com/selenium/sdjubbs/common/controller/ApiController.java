@@ -64,7 +64,7 @@ public class ApiController {
             @ApiImplicitParam(name = "gender", value = "性别(0:男,1:女,2:未知)", required = false, example = "2"),
             @ApiImplicitParam(name = "email", value = "邮箱", required = true, example = "895484122@qq.com"),
             @ApiImplicitParam(name = "phone", value = "手机号", required = false, example = "00000000000"),
-            @ApiImplicitParam(name = "headPicture", value = "头像", required = false, example = "/common/images/0.jpg"),
+            @ApiImplicitParam(name = "headPicture", value = "头像", required = false, example = "/common/images/avatar/default.jpg"),
             @ApiImplicitParam(name = "registerTime", value = "注册时间", required = false, example = "2019-09-01 23:37:49"),
             @ApiImplicitParam(name = "lastLoginTime", value = "上次登录时间", required = false, example = "2019-09-01 23:37:49"),
             @ApiImplicitParam(name = "status", value = "用户状态(0:有效,1:禁用)", required = false, example = "0"),
@@ -86,7 +86,7 @@ public class ApiController {
         user.setAge(0);
         user.setGender(2);
         user.setPhone("00000000000");
-        user.setHeadPicture("/common/images/0.jpg");
+        user.setHeadPicture("/common/images/avatar/default.jpg");
         user.setRegisterTime(TimeUtil.getTime());
         user.setLastLoginTime(TimeUtil.getTime());
         user.setStatus(0);
