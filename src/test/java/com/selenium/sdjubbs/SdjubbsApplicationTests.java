@@ -8,6 +8,7 @@ import com.selenium.sdjubbs.common.service.ArticleService;
 import com.selenium.sdjubbs.common.service.CommentService;
 import com.selenium.sdjubbs.common.service.ReplyService;
 import com.selenium.sdjubbs.common.service.UserService;
+import com.selenium.sdjubbs.common.util.Constant;
 import com.selenium.sdjubbs.common.util.TimeUtil;
 import com.selenium.sdjubbs.common.util.VerifyCodeUtil;
 import org.junit.Test;
@@ -18,6 +19,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RunWith(SpringRunner.class)
@@ -74,5 +77,30 @@ public class SdjubbsApplicationTests {
         user.setId(50);
         user.setStatus(0);
         userService.updateUser(user);
+    }
+
+    @Test
+    public void deleteUserByBatch() {
+        List<Integer> ids = new ArrayList<>();
+        ids.add(41);
+        userService.deleteUserByBatch(ids);
+    }
+
+    @Test
+    public void addUser() {
+        for (int i = 0; i < 1000; i++) {
+            User user = new User();
+            user.setUsername(UUID.randomUUID().toString().substring(0, 7));
+            user.setStatus(0);
+            user.setRole(0);
+            user.setPassword("8888888888888");
+            user.setSalt("888888");
+            user.setLastLoginTime(TimeUtil.getTime());
+            user.setRegisterTime(TimeUtil.getTime());
+            user.setEmail(UUID.randomUUID().toString().substring(0, 7) + "@qq.com");
+            user.setAge(0);
+            user.setHeadPicture(Constant.DEFAULT_HEAD_PICTURE);
+            userService.addUser(user);
+        }
     }
 }

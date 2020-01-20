@@ -2,8 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.selenium.sdjubbs.common.mapper.UserMapper">
     <insert id="addUser" useGeneratedKeys="true" parameterType="User">
-        insert into user(username,password,salt,age,gender,email,phone,head_picture,register_time,last_login_time,status,role)
-        values (#{username},#{password},#{salt},#{age},#{gender},#{email},#{phone},#{headPicture},#{registerTime},#{lastLoginTime},#{status},#{role})
+        insert into
+        user(username,password,salt,age,gender,email,phone,head_picture,register_time,last_login_time,status,role)
+        values
+        (#{username},#{password},#{salt},#{age},#{gender},#{email},#{phone},#{headPicture},#{registerTime},#{lastLoginTime},#{status},#{role})
     </insert>
     <select id="getUserByUsername" parameterType="String" resultType="User">
         select id,username,password,salt,age,gender,email,phone,head_picture,register_time,last_login_time,status,role
@@ -68,5 +70,11 @@
     </update>
     <delete id="deleteUser" parameterType="Integer">
         delete from user where id = #{id}
+    </delete>
+    <delete id="deleteUserByBatch">
+        delete from user where id in
+        <foreach item="id" collection="list" separator="," open="(" close=")">
+            #{id}
+        </foreach>
     </delete>
 </mapper>

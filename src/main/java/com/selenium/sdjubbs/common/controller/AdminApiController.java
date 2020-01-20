@@ -12,17 +12,22 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -122,23 +127,34 @@ public class AdminApiController {
             @ApiImplicitParam(name = "password", value = "密码(md5加密)", required = false, example = "3a42503923d841ac9b7ec83eed03b450"),
             @ApiImplicitParam(name = "age", value = "年龄", required = false, example = "0"),
             @ApiImplicitParam(name = "gender", value = "性别(0:男,1:女,2:未知)", required = false, example = "2"),
-            @ApiImplicitParam(name = "email", value = "邮箱", required = false, example = "895484122@qq.com"),
+            @ApiImplicitParam(name = "email", value = "邮箱", required = true, example = "895484122@qq.com"),
             @ApiImplicitParam(name = "phone", value = "手机号", required = false, example = "00000000000"),
             @ApiImplicitParam(name = "headPicture", value = "头像", required = false, example = "/common/images/avatar/default.jpg"),
     })
-    protected Result addUser(String name, String sessionId, User user, @RequestParam(value = "file", required = false) MultipartFile file) {
+    protected Result addUser(String name, String sessionId, @Valid User user, BindingResult bindingResult, @RequestParam(value = "file", required = false) MultipartFile file) {
         log.info("add user: " + user);
+        if (bindingResult.hasErrors()) {
+            List<ObjectError> allErrors = bindingResult.getAllErrors();
+            for (ObjectError error : allErrors) {
+                return Result.failure(Constant.REGISTER_USER_FORMAT_ERROR_CODE, error.getDefaultMessage());
+            }
+        }
         if (file != null) {
             String savePath = PhotoUtil.saveFile(file, setting.getAvatarSavePath()).split("/static")[1];
             user.setHeadPicture(savePath);
+        } else {
+            user.setHeadPicture(Constant.DEFAULT_HEAD_PICTURE);
         }
-        if (user.getPassword() != null) {
-            //通过MD5+随机salt加密写入数据库的密码
-            String salt = UUID.randomUUID().toString().substring(1, 10);
-            user.setSalt(salt);
-            String password = MD5Util.dbEncryption(user.getPassword(), salt);
-            user.setPassword(password);
-        }
+        //通过MD5+随机salt加密写入数据库的密码
+        String salt = UUID.randomUUID().toString().substring(1, 10);
+        user.setSalt(salt);
+        String password = MD5Util.dbEncryption(user.getPassword(), salt);
+        user.setPassword(password);
+        user.setRegisterTime(TimeUtil.getTime());
+        user.setLastLoginTime(TimeUtil.getTime());
+        user.setStatus(0);
+        user.setRole(0);
+        userService.addUser(user);
         return Result.success();
     }
 
@@ -163,6 +179,24 @@ public class AdminApiController {
         }
         return Result.success();
     }
+
+    @DeleteMapping(Api.USERS)
+    @ApiOperation(value = "批量删除用户")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+            @ApiImplicitParam(name = "ids", value = "用户id集合，逗号进行分割", required = true, example = "1"),
+    })
+    protected Result deleteUserByBatch(String name, String sessionId, @RequestParam("ids") String ids) {
+        List<Integer> idList = new ArrayList<>();
+        String[] idsTemp = ids.split(",");
+        for (String ip : idsTemp) {
+            idList.add(Integer.valueOf(ip));
+        }
+        userService.deleteUserByBatch(idList);
+        return Result.success();
+    }
+
 
     @GetMapping(Api.VERIFY_CODE)
     @ApiOperation(value = "获取验证码")

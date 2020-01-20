@@ -19,5 +19,7 @@ public interface UserMapper {
 
     Integer deleteUser(Integer id);
 
+    Integer deleteUserByBatch(List<Integer> ids);
+
     List<User> getAllUser();
 }

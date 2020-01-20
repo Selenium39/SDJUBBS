@@ -51,6 +51,12 @@ public class UserService implements UserMapper {
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
+    public Integer deleteUserByBatch(List<Integer> ids) {
+        return userMapper.deleteUserByBatch(ids);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<User> getAllUser() {
         return userMapper.getAllUser();
