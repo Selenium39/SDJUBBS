@@ -16,4 +16,29 @@
         where block_id = #{id}
         order by priority desc,create_time desc
     </select>
+    <select id="getAllArticle" resultType="Article">
+        select id,title,content,block_id,block_name,author_id,author_name,create_time,priority
+        from article
+    </select>
+    <update id="updateArticle" parameterType="Article">
+        update article
+        <set>
+            <if test="id!=null">
+                id = #{id},
+            </if>
+            <if test="title!=null">
+                title = #{title},
+            </if>
+            <if test="content!=null">
+                content = #{content},
+            </if>
+            <if test="blockId!=null">
+                block_id = #{blockId},
+            </if>
+            <if test="blockName!=null">
+                block_name = #{blockName},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

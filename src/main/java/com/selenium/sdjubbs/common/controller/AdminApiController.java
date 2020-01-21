@@ -3,8 +3,10 @@ package com.selenium.sdjubbs.common.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.selenium.sdjubbs.common.api.Api;
+import com.selenium.sdjubbs.common.bean.Article;
 import com.selenium.sdjubbs.common.bean.User;
 import com.selenium.sdjubbs.common.config.SdjubbsSetting;
+import com.selenium.sdjubbs.common.service.ArticleService;
 import com.selenium.sdjubbs.common.service.RedisService;
 import com.selenium.sdjubbs.common.service.UserService;
 import com.selenium.sdjubbs.common.util.*;
@@ -39,6 +41,8 @@ import java.util.UUID;
 public class AdminApiController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private ArticleService articleService;
     @Autowired
     private SdjubbsSetting setting;
     @Autowired
@@ -272,4 +276,60 @@ public class AdminApiController {
         }
 //        }
     }
+
+
+    //--------------------------------文章管理-----------------------------
+    @GetMapping(Api.ARTICLE)
+    @ApiOperation(value = "获取所有的文章")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+            @ApiImplicitParam(name = "page", value = "页数", required = true, example = "1"),
+            @ApiImplicitParam(name = "limit", value = "每页记录数", required = true, example = "10"),
+            @ApiImplicitParam(name = "order", value = "排序", required = false, example = "id asc"),
+    })
+    protected Result getAllArticle(String name, String sessionId, String page, String limit, String order) {
+        int pageSize = 0;
+        int pageNum = 0;
+        try {
+            pageSize = Integer.valueOf(limit);
+            pageNum = Integer.valueOf(page);
+            order = StringUtil.humpToLine(order);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure(Constant.REQUEST_PARAM_FORMAT_ERROR_CODE, Constant.REQUEST_PARAM_FORMAT_ERROR);
+        }
+        //获取第pageNum页,pageSize条内容
+        PageHelper.startPage(pageNum, pageSize, order);
+        List<Article> articles = articleService.getAllArticle();
+        PageInfo<Article> pageInfo = new PageInfo<>(articles);
+        if (articles == null) {
+            return Result.failure("暂时没有文章");
+        }
+        return Result.success().add("pageInfo", pageInfo);
+    }
+
+    @PutMapping(Api.ARTICLE + "/{id}")
+    @ApiOperation(value = "修改用户")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+    })
+    protected Result updateArticle(String name, String sessionId, @PathVariable Integer id,Article article) {
+        log.info("update article: " + article);
+
+        Integer count = 0;
+        try {
+            //count = userService.updateUser(user);
+            //todo update Article
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure(Constant.REQUEST_PARAM_FORMAT_ERROR_CODE, Constant.REQUEST_PARAM_FORMAT_ERROR);
+        }
+        if (count == 0) {
+            return Result.failure(Constant.LOGIN_USER_NOT_EXIST_CODE, Constant.LOGIN_USER_NOT_EXIST);
+        }
+        return Result.success();
+    }
+
 }

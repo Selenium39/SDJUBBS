@@ -30,4 +30,14 @@ public class ArticleService implements ArticleMapper {
     public List<Article> getAllArticleByBlockId(int blockId) {
         return articleMapper.getAllArticleByBlockId(blockId);
     }
+
+    @Override
+    public List<Article> getAllArticle() {
+        return articleMapper.getAllArticle();
+    }
+
+    @Override
+    public Integer updateArticle(Article article) {
+        return articleMapper.updateArticle(article);
+    }
 }
