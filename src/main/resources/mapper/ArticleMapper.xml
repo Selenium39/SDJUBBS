@@ -38,7 +38,22 @@
             <if test="blockName!=null">
                 block_name = #{blockName},
             </if>
+            <if test="createTime!=null">
+                create_time = #{createTime},
+            </if>
+            <if test="priority!=null">
+                priority = #{priority}
+            </if>
         </set>
         where id = #{id}
     </update>
+    <delete id="deleteArticle" parameterType="Integer">
+        delete from article where id = #{id}
+    </delete>
+    <delete id="deleteArticleByBatch">
+        delete from article where id in
+        <foreach item="id" collection="list" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

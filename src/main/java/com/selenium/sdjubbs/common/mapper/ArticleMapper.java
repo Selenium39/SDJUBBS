@@ -17,4 +17,8 @@ public interface ArticleMapper {
     List<Article> getAllArticle();
 
     Integer updateArticle(Article article);
+
+    Integer deleteArticle(Integer id);
+
+    Integer deleteArticleByBatch(List<Integer> ids);
 }

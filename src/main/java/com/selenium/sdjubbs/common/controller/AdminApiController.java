@@ -310,18 +310,17 @@ public class AdminApiController {
     }
 
     @PutMapping(Api.ARTICLE + "/{id}")
-    @ApiOperation(value = "修改用户")
+    @ApiOperation(value = "修改文章")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
             @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
     })
-    protected Result updateArticle(String name, String sessionId, @PathVariable Integer id,Article article) {
+    protected Result updateArticle(String name, String sessionId, @PathVariable Integer id, Article article) {
         log.info("update article: " + article);
 
         Integer count = 0;
         try {
-            //count = userService.updateUser(user);
-            //todo update Article
+            count = articleService.updateArticle(article);
         } catch (Exception e) {
             e.printStackTrace();
             return Result.failure(Constant.REQUEST_PARAM_FORMAT_ERROR_CODE, Constant.REQUEST_PARAM_FORMAT_ERROR);
@@ -332,4 +331,41 @@ public class AdminApiController {
         return Result.success();
     }
 
+    @DeleteMapping(Api.ARTICLE + "/{id}")
+    @ApiOperation(value = "删除文章")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+            @ApiImplicitParam(name = "id", value = "文章id", required = true, example = "1"),
+    })
+    protected Result deleteArticle(String name, String sessionId, @PathVariable Integer id) {
+        Integer count = 0;
+        try {
+            count = articleService.deleteArticle(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure(Constant.REQUEST_PARAM_FORMAT_ERROR_CODE, Constant.REQUEST_PARAM_FORMAT_ERROR);
+        }
+        if (count == 0) {
+            return Result.failure(Constant.LOGIN_USER_NOT_EXIST_CODE, Constant.LOGIN_USER_NOT_EXIST);
+        }
+        return Result.success();
+    }
+
+    @DeleteMapping(Api.ARTICLES)
+    @ApiOperation(value = "批量删除文章")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+            @ApiImplicitParam(name = "ids", value = "文章id集合，逗号进行分割", required = true, example = "1"),
+    })
+    protected Result deleteArticleByBatch(String name, String sessionId, @RequestParam("ids") String ids) {
+        List<Integer> idList = new ArrayList<>();
+        String[] idsTemp = ids.split(",");
+        for (String ip : idsTemp) {
+            idList.add(Integer.valueOf(ip));
+        }
+        articleService.deleteArticleByBatch(idList);
+        return Result.success();
+    }
 }

@@ -32,12 +32,28 @@ public class ArticleService implements ArticleMapper {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Article> getAllArticle() {
         return articleMapper.getAllArticle();
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public Integer updateArticle(Article article) {
         return articleMapper.updateArticle(article);
     }
+
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
+    public Integer deleteArticle(Integer id) {
+        return articleMapper.deleteArticle(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
+    public Integer deleteArticleByBatch(List<Integer> ids) {
+        return articleMapper.deleteArticleByBatch(ids);
+    }
+
+
 }
