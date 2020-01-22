@@ -38,13 +38,13 @@ public class SdjubbsApplicationTests {
 
     @Test
     public void insertArticle() {
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 20; i++) {
             Article article = new Article();
             article.setTitle("文章标题" + UUID.randomUUID().toString().substring(0, 6));
             article.setContent("文章内容" + UUID.randomUUID().toString().substring(0, 10));
             article.setAuthorId(16);
             article.setAuthorName("selenium");
-            article.setBlockId(1);
+            article.setBlockId(5);
             article.setBlockName("1111");
             article.setCreateTime(TimeUtil.getTime());
             article.setPriority(0);

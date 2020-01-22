@@ -21,4 +21,5 @@ public interface ArticleMapper {
     Integer deleteArticle(Integer id);
 
     Integer deleteArticleByBatch(List<Integer> ids);
+
 }

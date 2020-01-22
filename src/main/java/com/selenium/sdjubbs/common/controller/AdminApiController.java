@@ -4,9 +4,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.selenium.sdjubbs.common.api.Api;
 import com.selenium.sdjubbs.common.bean.Article;
+import com.selenium.sdjubbs.common.bean.Block;
 import com.selenium.sdjubbs.common.bean.User;
 import com.selenium.sdjubbs.common.config.SdjubbsSetting;
 import com.selenium.sdjubbs.common.service.ArticleService;
+import com.selenium.sdjubbs.common.service.BlockService;
 import com.selenium.sdjubbs.common.service.RedisService;
 import com.selenium.sdjubbs.common.service.UserService;
 import com.selenium.sdjubbs.common.util.*;
@@ -47,6 +49,8 @@ public class AdminApiController {
     private SdjubbsSetting setting;
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private BlockService blockService;
 
     @GetMapping(Api.USER)
     @ApiOperation(value = "获取所有的用户")
@@ -368,4 +372,35 @@ public class AdminApiController {
         articleService.deleteArticleByBatch(idList);
         return Result.success();
     }
+
+    //-------------------------------------板块相关------------------------------
+
+    /**
+     * method: get
+     * url: /block
+     * description: 获得所有板块
+     */
+    @GetMapping(Api.BLOCK)
+    @ApiOperation(value = "获得所有板块")
+    public Result getAllBlock() {
+        List<Block> blocks = blockService.getAllBlock();
+        return Result.success().add("blocks", blocks);
+    }
+
+    //---------------------------------------新增加文章------------------------------
+    @PostMapping(Api.ARTICLE)
+    @ApiOperation(value = "新增文章")
+    protected Result addArticle(String name, String sessionId, Article article) {
+        log.info("name: " + name + " article: " + article);
+        Block block = blockService.getBlockById(article.getBlockId());
+        article.setBlockName(block.getTitle());
+        User user = userService.getUserByUsername(name);
+        article.setAuthorId(user.getId());
+        article.setAuthorName(user.getUsername());
+        article.setCreateTime(TimeUtil.getTime());
+        article.setPriority(0);
+        articleService.addArticle(article);
+        return Result.success();
+    }
+
 }
