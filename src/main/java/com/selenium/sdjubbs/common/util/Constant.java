@@ -1,6 +1,7 @@
 package com.selenium.sdjubbs.common.util;
 
 public class Constant {
+    public static final String WEB_ROOT = "127.0.0.1:8080";
     public static final String DEFAULT_HEAD_PICTURE = "/common/images/avatar/default.jpg";
 
     public static final Integer PAGE_SIZE = 20;

@@ -12,4 +12,5 @@ public class Api {
     public static final String USER = "/user";
     public static final String USERS = "/users";
     public static final String VERIFY_CODE = "/code";
+    public static final String UPLOAD_IMAGE = "/image";
 }

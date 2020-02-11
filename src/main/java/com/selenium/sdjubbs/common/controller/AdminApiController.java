@@ -1,5 +1,6 @@
 package com.selenium.sdjubbs.common.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.selenium.sdjubbs.common.api.Api;
@@ -26,6 +27,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -398,9 +400,21 @@ public class AdminApiController {
         article.setAuthorId(user.getId());
         article.setAuthorName(user.getUsername());
         article.setCreateTime(TimeUtil.getTime());
-        article.setPriority(0);
         articleService.addArticle(article);
         return Result.success();
+    }
+
+
+    @PostMapping(Api.UPLOAD_IMAGE)
+    public JSONObject mdUploadImage(@RequestParam(value = "editormd-image-file", required = true) MultipartFile file) {
+        log.info("upload Image: " + file);
+        String savePath = PhotoUtil.saveFile(file, setting.getArticleImageSavePath()).split("/static")[1];
+        log.info("uploadImageSavePath: " + savePath);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("url", Constant.WEB_ROOT + savePath);
+        jsonObject.put("success", 1);
+        jsonObject.put("message", "upload success!");
+        return jsonObject;
     }
 
 }

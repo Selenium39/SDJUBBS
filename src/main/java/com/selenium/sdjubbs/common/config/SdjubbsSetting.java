@@ -19,4 +19,6 @@ public class SdjubbsSetting {
     private String verifyCodeRequestPath;
     @Value("${avatar-save-path}")
     private String avatarSavePath;
+    @Value("${article-image-save-path}")
+    private String articleImageSavePath;
 }

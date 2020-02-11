@@ -67,7 +67,7 @@ sdjubbs:
   verify-code-save-path: ${base-dir-save-path}images/verifycode
   verify-code-request-path: /common/images/verifycode
   avatar-save-path:  ${base-dir-save-path}images/avatar
-
+  article-image-save-path: ${base-dir-save-path}images/article
 
 
 
