@@ -8,9 +8,8 @@ import com.selenium.sdjubbs.common.service.ArticleService;
 import com.selenium.sdjubbs.common.service.CommentService;
 import com.selenium.sdjubbs.common.service.ReplyService;
 import com.selenium.sdjubbs.common.service.UserService;
-import com.selenium.sdjubbs.common.util.Constant;
-import com.selenium.sdjubbs.common.util.TimeUtil;
-import com.selenium.sdjubbs.common.util.VerifyCodeUtil;
+import com.selenium.sdjubbs.common.util.*;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,7 @@ import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Slf4j
 public class SdjubbsApplicationTests {
 
     @Autowired
@@ -103,4 +103,10 @@ public class SdjubbsApplicationTests {
             userService.addUser(user);
         }
     }
+
+    @Test
+    public void spider() {
+        SpiderUtil.getIndexNews();
+    }
+
 }

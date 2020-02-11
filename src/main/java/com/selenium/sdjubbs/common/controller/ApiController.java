@@ -1,7 +1,9 @@
 package com.selenium.sdjubbs.common.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.mysql.cj.xdevapi.JsonArray;
 import com.selenium.sdjubbs.common.api.Api;
 import com.selenium.sdjubbs.common.bean.*;
 import com.selenium.sdjubbs.common.service.*;
@@ -274,5 +276,27 @@ public class ApiController {
         replyService.addReply(reply);
         return Result.success();
     }
+
+    @PostMapping(Api.ARTICLE)
+    @ApiOperation(value = "新增文章")
+    protected Result addArticle(String name, String sessionId, Article article) {
+        log.info("name: " + name + " article: " + article);
+        Block block = blockService.getBlockById(article.getBlockId());
+        article.setBlockName(block.getTitle());
+        User user = userService.getUserByUsername(name);
+        article.setAuthorId(user.getId());
+        article.setAuthorName(user.getUsername());
+        article.setCreateTime(TimeUtil.getTime());
+        article.setPriority(0);
+        articleService.addArticle(article);
+        return Result.success();
+    }
+
+    @GetMapping(Api.INDEX_NEWS)
+    public Result showIndexNews() {
+        JSONArray jsonArray = SpiderUtil.getIndexNews();
+        return Result.success().add("news", jsonArray);
+    }
+
 
 }
