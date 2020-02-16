@@ -293,8 +293,15 @@ public class ApiController {
     }
 
     @GetMapping(Api.INDEX_NEWS)
+    @ApiOperation(value = "获取首页轮播图图片地址")
     public Result showIndexNews() {
-        JSONArray jsonArray = SpiderUtil.getIndexNews();
+        String jsonString = redisService.get("spider:name:news");
+        if (jsonString == null) {
+            log.info("redis key null");
+            jsonString = SpiderUtil.getIndexNews();
+            redisService.set("spider:name:news", jsonString);
+        }
+        JSONArray jsonArray = JSONArray.parseArray(jsonString);
         return Result.success().add("news", jsonArray);
     }
 

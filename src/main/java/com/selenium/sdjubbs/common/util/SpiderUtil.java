@@ -24,7 +24,7 @@ import java.util.List;
 public class SpiderUtil {
     public static final String SDJU_INDEX_URL = "https://www.sdju.edu.cn/";
 
-    public static JSONArray getIndexNews() {
+    public static String getIndexNews() {
         CloseableHttpResponse response = null;
         String html = "";
         //创建HttpClient对象
@@ -44,8 +44,7 @@ public class SpiderUtil {
         //log.info(scriptElement.data());
         String scriptElementString = scriptElement.data();
         String jsonString = scriptElementString.substring(scriptElementString.indexOf('['), scriptElementString.indexOf(']') + 1);
-        JSONArray jsonArray = JSONArray.parseArray(jsonString);
         //log.info(jsonArray.get(0).toString());
-        return jsonArray;
+        return jsonString;
     }
 }
