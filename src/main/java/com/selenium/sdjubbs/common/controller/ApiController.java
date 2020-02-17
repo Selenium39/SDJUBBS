@@ -305,5 +305,20 @@ public class ApiController {
         return Result.success().add("news", jsonArray);
     }
 
+    @GetMapping(Api.USER + "/{username}")
+    @ApiOperation(value = "通过用户名获取用户信息")
+    protected Result showProfile(String name,String sessionId,@PathVariable("username") String username) {
+        log.info("profile: " + username);
+        User user = userService.getUserByUsername(username);
+        if (user != null) {
+            //屏蔽掉返回给前台用户的某些信息
+            user.setPassword("");
+            user.setSalt("");
+            return Result.success().add("user", user);
+        } else {
+            return Result.failure();
+        }
+    }
+
 
 }
