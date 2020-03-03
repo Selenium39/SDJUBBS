@@ -44,7 +44,7 @@ public class AdminLoginStatusAop {
                 return Result.failure(Constant.FAILURE_CODE, Constant.LOGIN_USER_IDLE_CODE, Constant.LOGIN_USER_IDLE);
             }
         } catch (Exception e) {
-            log.info("doApiBefore抛出异常");
+            //log.info("doApiBefore抛出异常");
             e.printStackTrace();
             return Result.failure(Constant.FAILURE_CODE, Constant.LOGIN_USER_IDLE_CODE, Constant.LOGIN_USER_IDLE);
         }

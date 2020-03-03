@@ -3,22 +3,19 @@ package com.selenium.sdjubbs.common.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.mysql.cj.xdevapi.JsonArray;
 import com.selenium.sdjubbs.common.api.Api;
 import com.selenium.sdjubbs.common.bean.*;
+import com.selenium.sdjubbs.common.mapper.MessageMapper;
 import com.selenium.sdjubbs.common.service.*;
 import com.selenium.sdjubbs.common.util.*;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -48,6 +45,10 @@ public class ApiController {
     private CommentService commentService;
     @Autowired
     private ReplyService replyService;
+    @Autowired
+    private FeatureService featureService;
+    @Autowired
+    private MessageService messageService;
 
 
     /**
@@ -280,7 +281,7 @@ public class ApiController {
     @PostMapping(Api.ARTICLE)
     @ApiOperation(value = "新增文章")
     protected Result addArticle(String name, String sessionId, Article article) {
-        log.info("name: " + name + " article: " + article);
+        //log.info("name: " + name + " article: " + article);
         Block block = blockService.getBlockById(article.getBlockId());
         article.setBlockName(block.getTitle());
         User user = userService.getUserByUsername(name);
@@ -297,7 +298,7 @@ public class ApiController {
     public Result showIndexNews() {
         String jsonString = redisService.get("spider:name:news");
         if (jsonString == null) {
-            log.info("redis key null");
+            //log.info("redis key null");
             jsonString = SpiderUtil.getIndexNews();
             redisService.set("spider:name:news", jsonString);
         }
@@ -307,8 +308,8 @@ public class ApiController {
 
     @GetMapping(Api.USER + "/{username}")
     @ApiOperation(value = "通过用户名获取用户信息")
-    protected Result showProfile(String name,String sessionId,@PathVariable("username") String username) {
-        log.info("profile: " + username);
+    protected Result showProfile(String name, String sessionId, @PathVariable("username") String username) {
+        //log.info("profile: " + username);
         User user = userService.getUserByUsername(username);
         if (user != null) {
             //屏蔽掉返回给前台用户的某些信息
@@ -320,5 +321,30 @@ public class ApiController {
         }
     }
 
+    @GetMapping(Api.FEATURE)
+    @ApiOperation(value = "显示首页的功能模块")
+    public Result showFunction() {
+        List<Feature> features = featureService.getAllFeature();
+        return Result.success().add("features", features);
+    }
+
+    @PostMapping(Api.FEATURE_MESSAGE)
+    public Result addMessage(Message message) {
+        //log.info("message: " + message);
+        //为留言设置时间
+        message.setTime(TimeUtil.getTime());
+        //过滤掉留言的特殊字符
+        message.setContent(HtmlUtil.htmlFilter(message.getContent()));
+        //0代表未读，1代表已读
+        message.setStatus(0);
+        Integer integer = messageService.addMessage(message);
+        return Result.success().add("message", message);
+    }
+
+    @GetMapping(Api.FEATURE_MESSAGE)
+    public Result showMessage() {
+        List<Message> messages = messageService.getAllMessage();
+        return Result.success().add("messages", messages);
+    }
 
 }

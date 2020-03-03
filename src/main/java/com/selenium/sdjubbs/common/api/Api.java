@@ -14,4 +14,8 @@ public class Api {
     public static final String VERIFY_CODE = "/code";
     public static final String UPLOAD_IMAGE = "/image";
     public static final String INDEX_NEWS = "/news";
+    public static final String FEATURE = "/feature";
+    public static final String FEATURE_MESSAGE = "/feature/message";
+    public static final String FEATURE_MESSAGES = "/feature/messages";
+
 }

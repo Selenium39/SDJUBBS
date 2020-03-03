@@ -6,12 +6,10 @@ import com.github.pagehelper.PageInfo;
 import com.selenium.sdjubbs.common.api.Api;
 import com.selenium.sdjubbs.common.bean.Article;
 import com.selenium.sdjubbs.common.bean.Block;
+import com.selenium.sdjubbs.common.bean.Message;
 import com.selenium.sdjubbs.common.bean.User;
 import com.selenium.sdjubbs.common.config.SdjubbsSetting;
-import com.selenium.sdjubbs.common.service.ArticleService;
-import com.selenium.sdjubbs.common.service.BlockService;
-import com.selenium.sdjubbs.common.service.RedisService;
-import com.selenium.sdjubbs.common.service.UserService;
+import com.selenium.sdjubbs.common.service.*;
 import com.selenium.sdjubbs.common.util.*;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -53,6 +51,8 @@ public class AdminApiController {
     private RedisService redisService;
     @Autowired
     private BlockService blockService;
+    @Autowired
+    private MessageService messageService;
 
     @GetMapping(Api.USER)
     @ApiOperation(value = "获取所有的用户")
@@ -103,7 +103,7 @@ public class AdminApiController {
             @ApiImplicitParam(name = "status", value = "用户状态(0:有效,1:禁用)", required = false, example = "0"),
     })
     protected Result updateUser(String name, String sessionId, @PathVariable Integer id, User user, @RequestParam(value = "file", required = false) MultipartFile file) {
-        log.info("update user: " + user);
+        //log.info("update user: " + user);
         if (file != null) {
             String savePath = PhotoUtil.saveFile(file, setting.getAvatarSavePath()).split("/static")[1];
             user.setHeadPicture(savePath);
@@ -142,7 +142,7 @@ public class AdminApiController {
             @ApiImplicitParam(name = "headPicture", value = "头像", required = false, example = "/common/images/avatar/default.jpg"),
     })
     protected Result addUser(String name, String sessionId, @Valid User user, BindingResult bindingResult, @RequestParam(value = "file", required = false) MultipartFile file) {
-        log.info("add user: " + user);
+        //log.info("add user: " + user);
         if (bindingResult.hasErrors()) {
             List<ObjectError> allErrors = bindingResult.getAllErrors();
             for (ObjectError error : allErrors) {
@@ -251,9 +251,9 @@ public class AdminApiController {
         if (verifyCode == null || realVerifyCode == null || (!verifyCode.equalsIgnoreCase(realVerifyCode))) {
             return Result.failure(Constant.VERIFY_CODE_WRONG_CODE, Constant.VERIFY_CODE_WRONG);
         }
-        log.info("username: " + username + " password: " + password + " verifyCode: " + verifyCode + " recordId: " + recordId);
+        //log.info("username: " + username + " password: " + password + " verifyCode: " + verifyCode + " recordId: " + recordId);
         Subject subject = SecurityUtils.getSubject();
-        log.info("用户是否登录,isAuthenticated: " + subject.isAuthenticated());
+        //log.info("用户是否登录,isAuthenticated: " + subject.isAuthenticated());
         User user = userService.getUserByUsername(username);
         if (user == null) {
             return Result.failure(Constant.LOGIN_USER_NOT_EXIST_CODE, Constant.LOGIN_USER_NOT_EXIST);
@@ -269,14 +269,14 @@ public class AdminApiController {
         try {
             // 登录
             subject.login(token);
-            log.info("login success");
+            //log.info("login success");
             //存入redis key:username value: md5(ip+sessionId)
             String sessionId = session.getId();
             redisService.set("admin:name:" + username, MD5Util.md5(request.getRemoteAddr() + sessionId));
             return Result.success().add("username", username).add("sessionId", sessionId);
 
         } catch (AuthenticationException e) {
-            log.info("login failure");
+            //log.info("login failure");
             e.printStackTrace();
             return Result.failure(Constant.LOGIN_USER_WRONG_PASSWORD_CODE, Constant.LOGIN_USER_WRONG_PASSWORD);
         }
@@ -322,7 +322,7 @@ public class AdminApiController {
             @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
     })
     protected Result updateArticle(String name, String sessionId, @PathVariable Integer id, Article article) {
-        log.info("update article: " + article);
+        //log.info("update article: " + article);
 
         Integer count = 0;
         try {
@@ -393,7 +393,7 @@ public class AdminApiController {
     @PostMapping(Api.ARTICLE)
     @ApiOperation(value = "新增文章")
     protected Result addArticle(String name, String sessionId, Article article) {
-        log.info("name: " + name + " article: " + article);
+        //log.info("name: " + name + " article: " + article);
         Block block = blockService.getBlockById(article.getBlockId());
         article.setBlockName(block.getTitle());
         User user = userService.getUserByUsername(name);
@@ -407,9 +407,9 @@ public class AdminApiController {
 
     @PostMapping(Api.UPLOAD_IMAGE)
     public JSONObject mdUploadImage(@RequestParam(value = "editormd-image-file", required = true) MultipartFile file) {
-        log.info("upload Image: " + file);
+        //log.info("upload Image: " + file);
         String savePath = PhotoUtil.saveFile(file, setting.getArticleImageSavePath()).split("/static")[1];
-        log.info("uploadImageSavePath: " + savePath);
+        //log.info("uploadImageSavePath: " + savePath);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("url", Constant.WEB_ROOT + savePath);
         jsonObject.put("success", 1);
@@ -417,4 +417,95 @@ public class AdminApiController {
         return jsonObject;
     }
 
+
+    //--------------------------------留言管理-----------------------------
+
+    @GetMapping(Api.FEATURE_MESSAGE)
+    @ApiOperation(value = "获取所有的留言")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+            @ApiImplicitParam(name = "page", value = "页数", required = true, example = "1"),
+            @ApiImplicitParam(name = "limit", value = "每页记录数", required = true, example = "10"),
+            @ApiImplicitParam(name = "order", value = "排序", required = false, example = "id asc"),
+    })
+    protected Result getAllMessage(String name, String sessionId, String page, String limit, String order) {
+        int pageSize = 0;
+        int pageNum = 0;
+        try {
+            pageSize = Integer.valueOf(limit);
+            pageNum = Integer.valueOf(page);
+            order = StringUtil.humpToLine(order);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure(Constant.REQUEST_PARAM_FORMAT_ERROR_CODE, Constant.REQUEST_PARAM_FORMAT_ERROR);
+        }
+        //获取第pageNum页,pageSize条内容
+        PageHelper.startPage(pageNum, pageSize, order);
+        List<Message> messages = messageService.getAllMessageForAdmin();
+        PageInfo<Message> pageInfo = new PageInfo<>(messages);
+        if (messages == null) {
+            return Result.failure("暂时没有留言");
+        }
+        return Result.success().add("pageInfo", pageInfo);
+    }
+
+    @PutMapping(Api.FEATURE_MESSAGE + "/{id}")
+    @ApiOperation(value = "修改留言状态")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+    })
+    protected Result updateMessage(String name, String sessionId, @PathVariable Integer id, Message message) {
+        //log.info("update article: " + article);
+
+        Integer count = 0;
+        try {
+            count = messageService.updateMessage(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure(Constant.REQUEST_PARAM_FORMAT_ERROR_CODE, Constant.REQUEST_PARAM_FORMAT_ERROR);
+        }
+        if (count == 0) {
+            return Result.failure(Constant.MESSAGE_NOT_EXIST_CODE, Constant.MESSAGE_NOT_EXIST);
+        }
+        return Result.success();
+    }
+
+    @DeleteMapping(Api.FEATURE_MESSAGE + "/{id}")
+    @ApiOperation(value = "删除留言")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+    })
+    protected Result deleteMessage(String name, String sessionId, @PathVariable Integer id) {
+        Integer count = 0;
+        try {
+            count = messageService.deleteMessage(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure(Constant.REQUEST_PARAM_FORMAT_ERROR_CODE, Constant.REQUEST_PARAM_FORMAT_ERROR);
+        }
+        if (count == 0) {
+            return Result.failure(Constant.MESSAGE_NOT_EXIST_CODE, Constant.MESSAGE_NOT_EXIST);
+        }
+        return Result.success();
+    }
+
+    @DeleteMapping(Api.FEATURE_MESSAGES)
+    @ApiOperation(value = "批量删除留言")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+            @ApiImplicitParam(name = "ids", value = "用户id集合，逗号进行分割", required = true, example = "1"),
+    })
+    protected Result deleteMessageByBatch(String name, String sessionId, @RequestParam("ids") String ids) {
+        List<Integer> idList = new ArrayList<>();
+        String[] idsTemp = ids.split(",");
+        for (String ip : idsTemp) {
+            idList.add(Integer.valueOf(ip));
+        }
+        messageService.deleteMessageByBatch(idList);
+        return Result.success();
+    }
 }

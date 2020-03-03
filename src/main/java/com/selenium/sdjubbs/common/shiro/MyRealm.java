@@ -66,11 +66,11 @@ public class MyRealm extends AuthorizingRealm {
             Object principal = user.getUsername();// 用户
             Object credentials = user.getPassword();// 密码
             String realmName = this.getName();
-            log.info("realName: " + realmName);
+            //log.info("realName: " + realmName);
             info = new SimpleAuthenticationInfo(principal, credentials, realmName);
-            log.info("authentication info: " + info);
+            //log.info("authentication info: " + info);
         } catch (Exception e) {
-            System.out.println("doGetAuthenticationInfo exception");
+            //System.out.println("doGetAuthenticationInfo exception");
             e.printStackTrace();
         }
         // 4.如果查询到了,封装查询结果,返回给我们调用
@@ -85,13 +85,13 @@ public class MyRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        log.info("begin authorization");
+        //log.info("begin authorization");
         SimpleAuthorizationInfo info = null;
         String username = principals.toString();
         Set<String> roles = new HashSet<String>();
         roles.add("admin");
         info = new SimpleAuthorizationInfo(roles);
-        log.info("authorize info: " + info);
+        //log.info("authorize info: " + info);
         return info;
     }
 }

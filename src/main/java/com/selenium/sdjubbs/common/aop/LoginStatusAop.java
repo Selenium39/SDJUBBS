@@ -28,16 +28,16 @@ public class LoginStatusAop {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         String ip = request.getRemoteAddr();
-        log.info("请求ip: " + ip);
+        //log.info("请求ip: " + ip);
         try {
             Object[] args = pjp.getArgs();
             for (Object arg : args) {
-                log.info(arg.toString());
+                //log.info(arg.toString());
             }
             String name = args[0].toString();
             String sessionId = args[1].toString();
-            log.info("name:" + name);
-            log.info("sessionId:" + sessionId);
+            //log.info("name:" + name);
+            //log.info("sessionId:" + sessionId);
             String realSessionId = redisService.get("user:name:" + name);
             //value加入ip是为了防止别人拿到sessionId
             sessionId = MD5Util.md5(ip + sessionId);
@@ -47,7 +47,7 @@ public class LoginStatusAop {
                 return Result.failure(Constant.FAILURE_CODE, Constant.LOGIN_USER_IDLE_CODE, Constant.LOGIN_USER_IDLE);
             }
         } catch (Exception e) {
-            log.info("doApiBefore抛出异常");
+            //log.info("doApiBefore抛出异常");
             e.printStackTrace();
             return Result.failure(Constant.FAILURE_CODE, Constant.LOGIN_USER_IDLE_CODE, Constant.LOGIN_USER_IDLE);
         }
