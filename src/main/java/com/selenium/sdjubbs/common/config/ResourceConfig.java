@@ -14,7 +14,7 @@ private SdjubbsSetting setting;
         //前面是映射后的地址，后面是需要映射的地址
         //获取文件的真实路径
         String path = System.getProperty("user.dir") + setting.getBaseDirSavePath();
-            System.out.println(path);
+            //System.out.println(path);
             registry.addResourceHandler("/common/**").
                     addResourceLocations("file:" + path);
         super.addResourceHandlers(registry);

@@ -49,4 +49,10 @@ public class MessageService implements MessageMapper {
     public Integer deleteMessageByBatch(List<Integer> ids) {
         return messageMapper.deleteMessageByBatch(ids);
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Integer getNewMessageCount() {
+        return messageMapper.getNewMessageCount();
+    }
 }

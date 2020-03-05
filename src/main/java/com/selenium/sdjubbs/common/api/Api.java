@@ -8,6 +8,8 @@ public class Api {
     public static final String ARTICLE = "/article";
     public static final String ARTICLES = "/articles";
     public static final String COMMENT = "/comment";
+    public static final String COMMENTS = "/comments";
+    public static final String COMMENT_REPORTED_COUNT = "/comment/reported/count";
     public static final String REPLY = "/reply";
     public static final String USER = "/user";
     public static final String USERS = "/users";
@@ -16,6 +18,7 @@ public class Api {
     public static final String INDEX_NEWS = "/news";
     public static final String FEATURE = "/feature";
     public static final String FEATURE_MESSAGE = "/feature/message";
+    public static final String FEATURE_MESSAGE_NEW_COUNT = "/feature/message/new/count";
     public static final String FEATURE_MESSAGES = "/feature/messages";
 
 }

@@ -245,9 +245,37 @@ public class ApiController {
         comment.setContent(HtmlUtil.htmlFilter(comment.getContent()));
         comment.setCreateTime(TimeUtil.getTime());
         comment.setUserId(userService.getUserByUsername(comment.getUserName()).getId());
+        comment.setStatus(0);
         commentService.addComment(comment);
         return Result.success().add("comment", comment);
     }
+
+    /**
+     * method: put
+     * url: /comment/{id}
+     * description: 举报一条评论
+     */
+    @PutMapping(Api.COMMENT + "/{id}")
+    @ApiOperation(value = "举报评论")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+    })
+    protected Result updateComment(String name, String sessionId, @PathVariable Integer id, Comment comment) {
+        log.info("举报评论");
+        Integer count = 0;
+        try {
+            count = commentService.updateComment(comment);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure(Constant.REQUEST_PARAM_FORMAT_ERROR_CODE, Constant.REQUEST_PARAM_FORMAT_ERROR);
+        }
+        if (count == 0) {
+            return Result.failure(Constant.COMMENT_NOT_EXIST_CODE, Constant.COMMENT_NOT_EXIST);
+        }
+        return Result.success();
+    }
+
 
     /**
      * method: post

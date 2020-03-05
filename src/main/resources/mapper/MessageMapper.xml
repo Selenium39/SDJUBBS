@@ -32,4 +32,9 @@
             #{id}
         </foreach>
     </delete>
+    <select id="getNewMessageCount" resultType="Integer">
+        select count(*)
+        from message
+        where status = 0
+    </select>
 </mapper>

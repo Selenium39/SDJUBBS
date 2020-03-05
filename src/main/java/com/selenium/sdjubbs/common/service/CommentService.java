@@ -29,4 +29,35 @@ public class CommentService implements CommentMapper {
     public Integer addComment(Comment comment) {
         return commentMapper.addComment(comment);
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Comment> getAllComment() {
+        return commentMapper.getAllComment();
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    @Override
+    public Integer deleteComment(Integer id) {
+        return commentMapper.deleteComment(id);
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    @Override
+    public Integer updateComment(Comment comment) {
+        return commentMapper.updateComment(comment);
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    @Override
+    public Integer deleteCommentByBatch(List<Integer> ids) {
+        return commentMapper.deleteCommentByBatch(ids);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Integer getReportedCommentCount() {
+        return commentMapper.getReportedCommentCount();
+    }
+
 }

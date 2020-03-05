@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.selenium.sdjubbs.common.api.Api;
-import com.selenium.sdjubbs.common.bean.Article;
-import com.selenium.sdjubbs.common.bean.Block;
-import com.selenium.sdjubbs.common.bean.Message;
-import com.selenium.sdjubbs.common.bean.User;
+import com.selenium.sdjubbs.common.bean.*;
 import com.selenium.sdjubbs.common.config.SdjubbsSetting;
 import com.selenium.sdjubbs.common.service.*;
 import com.selenium.sdjubbs.common.util.*;
@@ -20,6 +17,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -53,6 +51,8 @@ public class AdminApiController {
     private BlockService blockService;
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping(Api.USER)
     @ApiOperation(value = "获取所有的用户")
@@ -497,7 +497,7 @@ public class AdminApiController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
             @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
-            @ApiImplicitParam(name = "ids", value = "用户id集合，逗号进行分割", required = true, example = "1"),
+            @ApiImplicitParam(name = "ids", value = "留言id集合，逗号进行分割", required = true, example = "1"),
     })
     protected Result deleteMessageByBatch(String name, String sessionId, @RequestParam("ids") String ids) {
         List<Integer> idList = new ArrayList<>();
@@ -508,4 +508,118 @@ public class AdminApiController {
         messageService.deleteMessageByBatch(idList);
         return Result.success();
     }
+
+    @GetMapping(Api.FEATURE_MESSAGE_NEW_COUNT)
+    @ApiOperation(value = "获取新增留言数量")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+    })
+    protected Result getMessageNewCount(String name, String sessionId) {
+        Integer newMessageCount = messageService.getNewMessageCount();
+        return Result.success().add("newMessageCount", newMessageCount);
+    }
+
+    //--------------------------------评论管理-----------------------------
+
+    @GetMapping(Api.COMMENT)
+    @ApiOperation(value = "获取所有的评论")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+            @ApiImplicitParam(name = "page", value = "页数", required = true, example = "1"),
+            @ApiImplicitParam(name = "limit", value = "每页记录数", required = true, example = "10"),
+            @ApiImplicitParam(name = "order", value = "排序", required = false, example = "id asc"),
+    })
+    protected Result getAllComment(String name, String sessionId, String page, String limit, String order) {
+        int pageSize = 0;
+        int pageNum = 0;
+        try {
+            pageSize = Integer.valueOf(limit);
+            pageNum = Integer.valueOf(page);
+            order = StringUtil.humpToLine(order);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure(Constant.REQUEST_PARAM_FORMAT_ERROR_CODE, Constant.REQUEST_PARAM_FORMAT_ERROR);
+        }
+        //获取第pageNum页,pageSize条内容
+        PageHelper.startPage(pageNum, pageSize, order);
+        List<Comment> comments = commentService.getAllComment();
+        PageInfo<Comment> pageInfo = new PageInfo<>(comments);
+        if (comments == null) {
+            return Result.failure("暂时没有评论");
+        }
+        return Result.success().add("pageInfo", pageInfo);
+    }
+
+    @PutMapping(Api.COMMENT + "/{id}")
+    @ApiOperation(value = "修改评论状态")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+    })
+    protected Result updateComment(String name, String sessionId, @PathVariable Integer id, Comment comment) {
+        //log.info("update article: " + article);
+
+        Integer count = 0;
+        try {
+            count = commentService.updateComment(comment);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure(Constant.REQUEST_PARAM_FORMAT_ERROR_CODE, Constant.REQUEST_PARAM_FORMAT_ERROR);
+        }
+        if (count == 0) {
+            return Result.failure(Constant.COMMENT_NOT_EXIST_CODE, Constant.COMMENT_NOT_EXIST);
+        }
+        return Result.success();
+    }
+
+    @DeleteMapping(Api.COMMENT + "/{id}")
+    @ApiOperation(value = "删除评论")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+    })
+    protected Result deleteComment(String name, String sessionId, @PathVariable Integer id) {
+        Integer count = 0;
+        try {
+            count = commentService.deleteComment(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure(Constant.REQUEST_PARAM_FORMAT_ERROR_CODE, Constant.REQUEST_PARAM_FORMAT_ERROR);
+        }
+        if (count == 0) {
+            return Result.failure(Constant.COMMENT_NOT_EXIST_CODE, Constant.COMMENT_NOT_EXIST);
+        }
+        return Result.success();
+    }
+
+    @DeleteMapping(Api.COMMENTS)
+    @ApiOperation(value = "批量删除评论")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+            @ApiImplicitParam(name = "ids", value = "评论id集合，逗号进行分割", required = true, example = "1"),
+    })
+    protected Result deleteCommentByBatch(String name, String sessionId, @RequestParam("ids") String ids) {
+        List<Integer> idList = new ArrayList<>();
+        String[] idsTemp = ids.split(",");
+        for (String ip : idsTemp) {
+            idList.add(Integer.valueOf(ip));
+        }
+        commentService.deleteCommentByBatch(idList);
+        return Result.success();
+    }
+
+    @GetMapping(Api.COMMENT_REPORTED_COUNT)
+    @ApiOperation(value = "获取被举报评论数量")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+    })
+    protected Result getReportedCommentCount(String name, String sessionId) {
+        Integer reportedCommentCount = commentService.getReportedCommentCount();
+        return Result.success().add("reportedCommentCount", reportedCommentCount);
+    }
+
 }

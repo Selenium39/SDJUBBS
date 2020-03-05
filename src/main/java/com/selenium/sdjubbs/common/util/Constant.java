@@ -16,6 +16,9 @@ public class Constant {
     public static final Integer REQUEST_PARAM_FORMAT_ERROR_CODE = 400;
     public static final String REQUEST_PARAM_FORMAT_ERROR = "请求参数格式错误";
 
+    public static final Integer COMMENT_NOT_EXIST_CODE = 6001;
+    public static final String COMMENT_NOT_EXIST = "评论不存在";
+
     public static final Integer MESSAGE_NOT_EXIST_CODE = 7001;
     public static final String MESSAGE_NOT_EXIST = "留言不存在";
 

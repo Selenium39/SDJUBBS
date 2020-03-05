@@ -8,6 +8,19 @@ import java.util.List;
 @Mapper
 public interface CommentMapper {
     List<Comment> getCommentByArticleId(Integer id);
+
     Comment getCommentById(Integer id);
+
     Integer addComment(Comment comment);
+
+    List<Comment> getAllComment();
+
+    Integer deleteComment(Integer id);
+
+    Integer updateComment(Comment comment);
+
+    Integer deleteCommentByBatch(List<Integer> ids);
+
+    Integer getReportedCommentCount();
+
 }

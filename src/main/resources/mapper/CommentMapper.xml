@@ -13,7 +13,34 @@
          where id = #{id}
     </select>
     <insert id="addComment">
-        insert into comment(content,create_time,article_id,user_id,user_name)
-        values(#{content},#{createTime},#{articleId},#{userId},#{userName})
+        insert into comment(content,create_time,article_id,user_id,user_name,status)
+        values(#{content},#{createTime},#{articleId},#{userId},#{userName},#{status})
     </insert>
+    <select id="getAllComment" resultType="Comment">
+        select id,content,create_time,article_id,user_id,user_name,status
+         from comment
+    </select>
+    <update id="updateComment" parameterType="Comment">
+        update comment
+        <set>
+            <if test="status!=null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteComment" parameterType="Integer">
+        delete from comment where id = #{id}
+    </delete>
+    <delete id="deleteCommentByBatch">
+        delete from comment where id in
+        <foreach item="id" collection="list" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="getReportedCommentCount" resultType="Integer">
+        select count(*)
+        from comment
+        where status = 1
+    </select>
 </mapper>

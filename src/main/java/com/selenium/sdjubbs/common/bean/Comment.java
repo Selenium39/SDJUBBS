@@ -14,6 +14,7 @@ public class Comment implements Serializable {
     private Integer articleId;
     private Integer userId;
     private String userName;
+    private Integer status;//0代表正常 1代表被举报
 
     public Comment() {
 
