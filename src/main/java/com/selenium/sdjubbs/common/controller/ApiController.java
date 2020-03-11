@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.selenium.sdjubbs.common.api.Api;
 import com.selenium.sdjubbs.common.bean.*;
+import com.selenium.sdjubbs.common.config.SdjubbsSetting;
 import com.selenium.sdjubbs.common.mapper.MessageMapper;
 import com.selenium.sdjubbs.common.service.*;
 import com.selenium.sdjubbs.common.util.*;
@@ -49,6 +50,8 @@ public class ApiController {
     private FeatureService featureService;
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private SdjubbsSetting setting;
 
 
     /**
@@ -429,4 +432,18 @@ public class ApiController {
         return Result.success().add("collect", collect);
     }
 
+
+    //二维码相关
+    @PostMapping(Api.FEATURE_QR)
+    public Result createQr(String content, int width, int height) {
+        log.info("content: " + content);
+        String imagePath = "/common/" + setting.getQrSavePath().split("/common/")[1];
+        String imageName = MD5Util.md5(content);
+        try {
+            QrUtil.createQr(new String(content.getBytes("UTF-8"), "ISO-8859-1"), width, height, System.getProperty("user.dir") + "\\src\\main\\resources\\static\\common\\images\\qr", imageName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.success().add("imgPath", imagePath + "/" + imageName + ".png");
+    }
 }

@@ -23,5 +23,6 @@ public class Api {
     public static final String FEATURE_MESSAGE = "/feature/message";
     public static final String FEATURE_MESSAGE_NEW_COUNT = "/feature/message/new/count";
     public static final String FEATURE_MESSAGES = "/feature/messages";
+    public static final String FEATURE_QR = "/feature/qr";
 
 }

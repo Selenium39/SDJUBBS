@@ -1,3 +1,13 @@
+#encoding---------------------------------------------------------------------
+http:
+  encoding:
+    charset: UTF-8
+    enabled: true
+    force: true
+#--------------------------Server--------------------------
+server:
+  tomcat:
+    uri-encoding: UTF-8
 spring:
   #druid------------------------------------------------------------------
   datasource:
@@ -68,6 +78,7 @@ sdjubbs:
   verify-code-request-path: /common/images/verifycode
   avatar-save-path:  ${base-dir-save-path}images/avatar
   article-image-save-path: ${base-dir-save-path}images/article
+  qr-save-path: ${base-dir-save-path}images/qr
 
 
 
