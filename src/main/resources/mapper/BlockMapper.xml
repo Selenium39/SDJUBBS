@@ -11,4 +11,31 @@
         from block
         where id = #{id}
     </select>
+    <update id="updateBlock" parameterType="Block">
+        update block
+        <set>
+            <if test="id!=null">
+                id = #{id},
+            </if>
+            <if test="blockPicture!=null">
+                block_picture= #{blockPicture},
+            </if>
+            <if test="title!=null">
+                title= #{title},
+            </if>
+            <if test="authorId!=null">
+                author_id= #{authorId},
+            </if>
+            <if test="authorName!=null">
+                author_name= #{authorName},
+            </if>
+            <if test="articleNum!=null">
+                article_num= #{articleNum},
+            </if>
+            <if test="saveNum!=null">
+                save_num= #{saveNum},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

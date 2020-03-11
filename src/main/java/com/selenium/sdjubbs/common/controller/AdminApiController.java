@@ -401,6 +401,8 @@ public class AdminApiController {
         article.setAuthorName(user.getUsername());
         article.setCreateTime(TimeUtil.getTime());
         articleService.addArticle(article);
+        block.setArticleNum(block.getArticleNum() + 1);
+        blockService.updateBlock(block);
         return Result.success();
     }
 

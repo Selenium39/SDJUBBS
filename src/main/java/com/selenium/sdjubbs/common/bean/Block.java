@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Data
 public class Block implements Serializable {
     private Integer id;
-    private String BlockPicture;
+    private String blockPicture;
     private String title;
     private Integer authorId;
     private String authorName;

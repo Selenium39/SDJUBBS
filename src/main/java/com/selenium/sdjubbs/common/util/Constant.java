@@ -57,4 +57,7 @@ public class Constant {
     public static final Integer VERIFY_CODE_WRONG_CODE = 4001;
     public static final String VERIFY_CODE_WRONG = "验证码错误";
 
+    public static final Integer COLLECTION_DUPLICATE_CODE = 3001;
+    public static final String COLLECTION_DUPLICATE = "收藏操作重复";
+
 }

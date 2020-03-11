@@ -21,8 +21,23 @@ public class RedisService {
     }
 
     @Transactional(rollbackFor = {Exception.class})
-    public void set(String key, String value,Integer timeout) {
-        stringRedisTemplate.opsForValue().set(key, value,timeout, TimeUnit.SECONDS);
+    public void set(String key, String value, Integer timeout) {
+        stringRedisTemplate.opsForValue().set(key, value, timeout, TimeUnit.SECONDS);
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean hasKey(String key) {
+        return stringRedisTemplate.hasKey(key);
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    public void incr(String key) {
+        stringRedisTemplate.boundValueOps(key).increment(1);
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    public void decr(String key) {
+        stringRedisTemplate.boundValueOps(key).decrement(1);
     }
 
     @Transactional(readOnly = true)
@@ -31,6 +46,9 @@ public class RedisService {
     }
 
     @Transactional(rollbackFor = {Exception.class})
-    public Boolean delete(String key){return stringRedisTemplate.delete(key);}
+    public Boolean delete(String key) {
+        return stringRedisTemplate.delete(key);
+    }
+
 
 }

@@ -262,7 +262,6 @@ public class ApiController {
             @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
     })
     protected Result updateComment(String name, String sessionId, @PathVariable Integer id, Comment comment) {
-        log.info("举报评论");
         Integer count = 0;
         try {
             count = commentService.updateComment(comment);
@@ -318,6 +317,8 @@ public class ApiController {
         article.setCreateTime(TimeUtil.getTime());
         article.setPriority(0);
         articleService.addArticle(article);
+        block.setArticleNum(block.getArticleNum() + 1);
+        blockService.updateBlock(block);
         return Result.success();
     }
 
@@ -370,9 +371,62 @@ public class ApiController {
     }
 
     @GetMapping(Api.FEATURE_MESSAGE)
+    @ApiOperation(value = "查看所有留言")
     public Result showMessage() {
         List<Message> messages = messageService.getAllMessage();
         return Result.success().add("messages", messages);
+    }
+
+    @PostMapping(Api.COLLECTION)
+    @ApiOperation(value = "添加或取消收藏")
+    protected Result doCollect(String name, String sessionId, String blockId, String collect) {
+        String save = redisService.get("collection:" + name + ":" + blockId);
+        //收藏重复操作
+        if (save != null && save.equals(collect)) {
+            return Result.failure(Constant.COLLECTION_DUPLICATE_CODE, Constant.COLLECTION_DUPLICATE);
+        }
+        //第一次只能收藏，不能取消收藏
+        Block block = blockService.getBlockById(Integer.valueOf(blockId));
+        if (save == null) {
+            save = "1";
+            redisService.set("collection:" + name + ":" + blockId, "1");
+            redisService.incr("collection:number:" + blockId);
+            block.setSaveNum(block.getSaveNum() + 1);
+            blockService.updateBlock(block);
+        } else {
+            //用户是否收藏此版块 0未收藏 1收藏
+            redisService.set("collection:" + name + ":" + blockId, collect);
+            if ("1".equals(collect)) {
+                redisService.incr("collection:number:" + blockId);
+                block.setSaveNum(block.getSaveNum() + 1);
+            } else {
+                redisService.decr("collection:number:" + blockId);
+                block.setSaveNum(block.getSaveNum() - 1);
+            }
+            blockService.updateBlock(block);
+        }
+
+        return Result.success().add("collect", collect);
+    }
+
+    @GetMapping(Api.COLLECTION_NUM)
+    @ApiOperation(value = "查询板块收藏数量")
+    public Result getCollectNum(String blockId) {
+        String collectNum = redisService.get("collection:number:" + blockId);
+        if (collectNum == null) {
+            collectNum = "0";
+        }
+        return Result.success().add("collectNum", collectNum);
+    }
+
+    @GetMapping(Api.COLLECTION_USER)
+    @ApiOperation(value = "查询用户是否收藏某板块")
+    protected Result getIsCollect(String name, String sessionId, String blockId) {
+        String collect = redisService.get("collection:" + name + ":" + blockId);
+        if (collect == null) {
+            collect = "0";
+        }
+        return Result.success().add("collect", collect);
     }
 
 }

@@ -9,4 +9,5 @@ import java.util.List;
 public interface BlockMapper {
      List<Block> getAllBlock();
      Block getBlockById(int id);
+     Integer updateBlock(Block block);
 }

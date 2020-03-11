@@ -26,5 +26,10 @@ public class BlockService implements BlockMapper {
         return blockMapper.getBlockById(id);
     }
 
+    @Override
+    public Integer updateBlock(Block block) {
+        return blockMapper.updateBlock(block);
+    }
+
 
 }
