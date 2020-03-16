@@ -23,4 +23,6 @@ public class SdjubbsSetting {
     private String articleImageSavePath;
     @Value("${qr-save-path}")
     private String qrSavePath;
+    @Value("${block-picture-save-path}")
+    private String blockPictureSavePath;
 }

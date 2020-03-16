@@ -169,7 +169,7 @@ public class ApiController {
     @GetMapping(Api.BLOCK)
     @ApiOperation(value = "获得所有板块")
     public Result getAllBlock() {
-        List<Block> blocks = blockService.getAllBlock();
+        List<Block> blocks = blockService.getAllBlockForUser();
         return Result.success().add("blocks", blocks);
     }
 

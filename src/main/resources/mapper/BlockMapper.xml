@@ -6,6 +6,12 @@
         from block
         order by save_num desc,article_num desc
     </select>
+    <select id="getAllBlockForUser" resultType="Block">
+        select id,block_picture,title,author_id,author_name,article_num,save_num,create_time
+        from block
+        where article_num !=0
+        order by save_num desc,article_num desc
+    </select>
     <select id="getBlockById" resultType="Block">
         select id,block_picture,title,author_id,author_name,article_num,save_num,create_time
         from block
@@ -38,4 +44,10 @@
         </set>
         where id = #{id}
     </update>
+    <insert id="addBlock" useGeneratedKeys="true" parameterType="Block">
+        insert into
+        block(title,block_picture,author_id,author_name,article_num,save_num,create_time)
+        values
+        (#{title},#{blockPicture},#{authorId},#{authorName},#{articleNum},#{saveNum},#{createTime})
+    </insert>
 </mapper>

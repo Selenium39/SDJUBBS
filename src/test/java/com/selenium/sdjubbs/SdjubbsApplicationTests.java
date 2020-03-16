@@ -4,6 +4,7 @@ import com.selenium.sdjubbs.common.bean.Article;
 import com.selenium.sdjubbs.common.bean.Comment;
 import com.selenium.sdjubbs.common.bean.Reply;
 import com.selenium.sdjubbs.common.bean.User;
+import com.selenium.sdjubbs.common.config.SdjubbsSetting;
 import com.selenium.sdjubbs.common.service.ArticleService;
 import com.selenium.sdjubbs.common.service.CommentService;
 import com.selenium.sdjubbs.common.service.ReplyService;
@@ -35,6 +36,8 @@ public class SdjubbsApplicationTests {
     private ReplyService replyService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private SdjubbsSetting setting;
 
     @Test
     public void insertArticle() {
@@ -107,6 +110,12 @@ public class SdjubbsApplicationTests {
     @Test
     public void spider() {
         SpiderUtil.getIndexNews();
+    }
+
+    @Test
+    public void deleteAllFilesUnderDir() {
+        String savePath = System.getProperty("user.dir") + setting.getQrSavePath();
+        FileUtil.deleteAllFilesUnderDir(savePath);
     }
 
 }

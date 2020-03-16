@@ -18,4 +18,17 @@ public class FileUtil {
         }
 
     }
+    public static void deleteAllFilesUnderDir(String path) {
+        if (path.isEmpty() ) {
+            return;
+        }
+        File file = new File(path);
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            for (File fileTemp : files) {
+                    fileTemp.delete();
+            }
+        }
+
+    }
 }

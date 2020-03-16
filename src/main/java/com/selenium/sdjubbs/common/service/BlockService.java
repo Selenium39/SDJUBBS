@@ -21,6 +21,11 @@ public class BlockService implements BlockMapper {
     }
 
     @Override
+    public List<Block> getAllBlockForUser() {
+        return blockMapper.getAllBlockForUser();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Block getBlockById(int id) {
         return blockMapper.getBlockById(id);
@@ -29,6 +34,11 @@ public class BlockService implements BlockMapper {
     @Override
     public Integer updateBlock(Block block) {
         return blockMapper.updateBlock(block);
+    }
+
+    @Override
+    public Integer addBlock(Block block) {
+        return blockMapper.addBlock(block);
     }
 
 

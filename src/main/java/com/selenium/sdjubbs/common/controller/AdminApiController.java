@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -104,7 +105,7 @@ public class AdminApiController {
     })
     protected Result updateUser(String name, String sessionId, @PathVariable Integer id, User user, @RequestParam(value = "file", required = false) MultipartFile file) {
         //log.info("update user: " + user);
-        if (file != null) {
+        if (file != null && file.getSize() != 0) {
             String savePath = PhotoUtil.saveFile(file, setting.getAvatarSavePath()).split("/static")[1];
             user.setHeadPicture(savePath);
         }
@@ -149,7 +150,7 @@ public class AdminApiController {
                 return Result.failure(Constant.REGISTER_USER_FORMAT_ERROR_CODE, error.getDefaultMessage());
             }
         }
-        if (file != null) {
+        if (file != null && file.getSize() != 0) {
             String savePath = PhotoUtil.saveFile(file, setting.getAvatarSavePath()).split("/static")[1];
             user.setHeadPicture(savePath);
         } else {
@@ -236,6 +237,8 @@ public class AdminApiController {
     }
 
 
+    //--------------------------------登录退出管理-----------------------------
+
     @PostMapping(Api.LOGIN)
     @ApiOperation(value = "登录")
     @ApiImplicitParams({
@@ -281,6 +284,17 @@ public class AdminApiController {
             return Result.failure(Constant.LOGIN_USER_WRONG_PASSWORD_CODE, Constant.LOGIN_USER_WRONG_PASSWORD);
         }
 //        }
+    }
+
+    @GetMapping(Api.LOGOUT)
+    @ApiOperation(value = "退出登录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+    })
+    protected Result logout(String name, String sessionId) {
+        redisService.delete("admin:name:" + name);
+        return Result.success();
     }
 
 
@@ -382,12 +396,90 @@ public class AdminApiController {
      * url: /block
      * description: 获得所有板块
      */
-    @GetMapping(Api.BLOCK)
+    @GetMapping(Api.BLOCK_ALL)
     @ApiOperation(value = "获得所有板块")
     public Result getAllBlock() {
         List<Block> blocks = blockService.getAllBlock();
         return Result.success().add("blocks", blocks);
     }
+
+    @GetMapping(Api.BLOCK)
+    @ApiOperation(value = "获得所有板块(分页)")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+            @ApiImplicitParam(name = "page", value = "页数", required = true, example = "1"),
+            @ApiImplicitParam(name = "limit", value = "每页记录数", required = true, example = "10"),
+            @ApiImplicitParam(name = "order", value = "排序", required = false, example = "id asc"),
+    })
+    protected Result getAllBlock(String name, String sessionId, String page, String limit, String order) {
+        int pageSize = 0;
+        int pageNum = 0;
+        try {
+            pageSize = Integer.valueOf(limit);
+            pageNum = Integer.valueOf(page);
+            order = StringUtil.humpToLine(order);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure(Constant.REQUEST_PARAM_FORMAT_ERROR_CODE, Constant.REQUEST_PARAM_FORMAT_ERROR);
+        }
+        //获取第pageNum页,pageSize条内容
+        PageHelper.startPage(pageNum, pageSize, order);
+        List<Block> blocks = blockService.getAllBlock();
+        PageInfo<Block> pageInfo = new PageInfo<>(blocks);
+        if (blocks == null) {
+            return Result.failure("暂时没有板块");
+        }
+        return Result.success().add("pageInfo", pageInfo);
+    }
+
+    @PostMapping(Api.BLOCK)
+    @ApiOperation(value = "新增板块")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+            @ApiImplicitParam(name = "title", value = "版块名", required = false, example = "test"),
+            @ApiImplicitParam(name = "blockPicture", value = "板块封面", required = false, example = "/common/images/avatar/default.jpg"),
+    })
+    protected Result addBlock(String name, String sessionId, Block block, @RequestParam(value = "file", required = false) MultipartFile file) {
+        if (file != null && file.getSize() != 0) {
+            String savePath = PhotoUtil.saveFile(file, setting.getBlockPictureSavePath()).split("/static")[1];
+            block.setBlockPicture(savePath);
+        } else {
+            block.setBlockPicture(Constant.DEFAULT_HEAD_PICTURE);
+        }
+        block.setArticleNum(0);
+        block.setSaveNum(0);
+        User user = userService.getUserByUsername(name);
+        if (user == null) {
+            return Result.failure(Constant.LOGIN_USER_NOT_EXIST_CODE, Constant.LOGIN_USER_NOT_EXIST);
+        } else {
+            block.setAuthorId(user.getId());
+            block.setAuthorName(name);
+            block.setCreateTime(TimeUtil.getTime());
+            blockService.addBlock(block);
+        }
+        return Result.success();
+    }
+
+    @PutMapping(Api.BLOCK + "/{id}")
+    @ApiOperation(value = "修改板块")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+            @ApiImplicitParam(name = "id", value = "板块id", required = true, example = "1"),
+            @ApiImplicitParam(name = "title", value = "板块名", required = false, example = "test"),
+            @ApiImplicitParam(name = "blockPicture", value = "板块封面", required = false)
+    })
+    protected Result updateBlock(String name, String sessionId, @PathVariable Integer id, Block block, @RequestParam(value = "file", required = false) MultipartFile file) {
+        if (file != null && file.getSize() != 0) {
+            String savePath = PhotoUtil.saveFile(file, setting.getAvatarSavePath()).split("/static")[1];
+            block.setBlockPicture(savePath);
+        }
+        blockService.updateBlock(block);
+        return Result.success();
+    }
+
 
     //---------------------------------------新增加文章------------------------------
     @PostMapping(Api.ARTICLE)
@@ -622,6 +714,19 @@ public class AdminApiController {
     protected Result getReportedCommentCount(String name, String sessionId) {
         Integer reportedCommentCount = commentService.getReportedCommentCount();
         return Result.success().add("reportedCommentCount", reportedCommentCount);
+    }
+
+    //--------------------------------二维码管理-----------------------------
+    @DeleteMapping(Api.FEATURE_QR)
+    @ApiOperation(value = "清空二维码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+    })
+    protected Result deleteAllQr(String name, String sessionId) {
+        String savePath = System.getProperty("user.dir") + setting.getQrSavePath();
+        FileUtil.deleteAllFilesUnderDir(savePath);
+        return Result.success();
     }
 
 }

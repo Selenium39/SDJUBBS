@@ -7,7 +7,13 @@ import java.util.List;
 
 @Mapper
 public interface BlockMapper {
-     List<Block> getAllBlock();
-     Block getBlockById(int id);
-     Integer updateBlock(Block block);
+    List<Block> getAllBlock();
+
+    List<Block> getAllBlockForUser();
+
+    Block getBlockById(int id);
+
+    Integer updateBlock(Block block);
+
+    Integer addBlock(Block block);
 }
