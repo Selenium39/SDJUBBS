@@ -6,6 +6,7 @@ public class Api {
     public static final String LOGOUT = "/logout";
     public static final String BLOCK_ALL = "/block/all";
     public static final String BLOCK = "/block";
+    public static final String SEARCH_BLOCK="/search/block";
     public static final String ARTICLE = "/article";
     public static final String ARTICLES = "/articles";
     public static final String COMMENT = "/comment";

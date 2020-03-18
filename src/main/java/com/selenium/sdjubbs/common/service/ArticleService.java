@@ -2,9 +2,11 @@ package com.selenium.sdjubbs.common.service;
 
 import com.selenium.sdjubbs.common.bean.Article;
 import com.selenium.sdjubbs.common.mapper.ArticleMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -29,6 +31,12 @@ public class ArticleService implements ArticleMapper {
     @Transactional(readOnly = true)
     public List<Article> getAllArticleByBlockId(int blockId) {
         return articleMapper.getAllArticleByBlockId(blockId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Article> getAllArticleByBlockIdAndSearch(@Param("blockId") int blockId, @Param("search") String search) {
+        return articleMapper.getAllArticleByBlockIdAndSearch(blockId, search);
     }
 
     @Override

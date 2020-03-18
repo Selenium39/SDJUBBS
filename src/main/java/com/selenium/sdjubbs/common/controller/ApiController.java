@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -194,6 +195,26 @@ public class ApiController {
 
     /**
      * method: get
+     * url: /search/block/id
+     * description: 查找板块下的文章
+     */
+    @GetMapping(Api.SEARCH_BLOCK + "/{id}")
+    @ApiOperation(value = "查找板块下的文章")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "板块id", required = true, example = "1"),
+            @ApiImplicitParam(name = "search", value = "查找内容", required = true, example = "1"),
+            @ApiImplicitParam(name = "id", value = "页数", required = true, example = "1"),
+    })
+    public Result getArticleUnderBlock(@PathVariable("id") int id, @RequestParam("search") String search, @RequestParam("pn") int pn) {
+        log.info("id: " + id + "search: " + search + "pn: " + pn);
+        PageHelper.startPage(pn, Constant.PAGE_SIZE);
+        List<Article> articles = articleService.getAllArticleByBlockIdAndSearch(id, search);
+        PageInfo<Article> pageInfo = new PageInfo<>(articles, Constant.NAVIGATE_PAGE_SIZE);
+        return Result.success().add("pageInfo", pageInfo);
+    }
+
+    /**
+     * method: get
      * url: /article/id
      * description: 根据文章id获取文章和文章下所有评论
      */
@@ -338,6 +359,9 @@ public class ApiController {
         return Result.success().add("news", jsonArray);
     }
 
+
+    //--------------------------------用户信息-----------------------------
+
     @GetMapping(Api.USER + "/{username}")
     @ApiOperation(value = "通过用户名获取用户信息")
     protected Result showProfile(String name, String sessionId, @PathVariable("username") String username) {
@@ -352,6 +376,39 @@ public class ApiController {
             return Result.failure();
         }
     }
+
+    @PutMapping(Api.USER + "/{id}")
+    @ApiOperation(value = "修改用户")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "登录身份凭证", required = true, example = "test"),
+            @ApiImplicitParam(name = "sessionId", value = "cookie中存的值", required = true, example = "A7D3515256A097709011A5EBB86D9FEF"),
+            @ApiImplicitParam(name = "id", value = "用户id", required = true, example = "1"),
+            @ApiImplicitParam(name = "username", value = "用户名(长度:4-12)", required = false, example = "test"),
+            @ApiImplicitParam(name = "age", value = "年龄", required = false, example = "0"),
+            @ApiImplicitParam(name = "gender", value = "性别(0:男,1:女,2:未知)", required = false, example = "2"),
+            @ApiImplicitParam(name = "email", value = "邮箱", required = false, example = "895484122@qq.com"),
+            @ApiImplicitParam(name = "phone", value = "手机号", required = false, example = "00000000000"),
+            @ApiImplicitParam(name = "headPicture", value = "头像", required = false, example = "/common/images/avatar/default.jpg"),
+    })
+    protected Result updateUser(String name, String sessionId, @PathVariable Integer id, User user, @RequestParam(value = "file", required = false) MultipartFile file) {
+        //log.info("update user: " + user);
+        if (file != null && file.getSize() != 0) {
+            String savePath = PhotoUtil.saveFile(file, setting.getAvatarSavePath()).split("/static")[1];
+            user.setHeadPicture(savePath);
+        }
+        Integer count = 0;
+        try {
+            count = userService.updateUser(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure(Constant.REQUEST_PARAM_FORMAT_ERROR_CODE, Constant.REQUEST_PARAM_FORMAT_ERROR);
+        }
+        if (count == 0) {
+            return Result.failure(Constant.LOGIN_USER_NOT_EXIST_CODE, Constant.LOGIN_USER_NOT_EXIST);
+        }
+        return Result.success();
+    }
+
 
     @GetMapping(Api.FEATURE)
     @ApiOperation(value = "显示首页的功能模块")
