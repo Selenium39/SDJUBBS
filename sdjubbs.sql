@@ -11,7 +11,7 @@
  Target Server Version : 80017
  File Encoding         : 65001
 
- Date: 05/03/2020 18:31:08
+ Date: 30/03/2020 22:31:35
 */
 
 SET NAMES utf8mb4;
@@ -37,7 +37,7 @@ CREATE TABLE `article`  (
   INDEX `id`(`id`) USING BTREE,
   CONSTRAINT `fk_article_author` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_article_block` FOREIGN KEY (`block_id`) REFERENCES `block` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 3008 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3013 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of article
@@ -3049,6 +3049,11 @@ INSERT INTO `article` VALUES (3004, '888', '<p>888</p>\n', 1, '1111', 16, 'selen
 INSERT INTO `article` VALUES (3005, '5555555555555555', '<p>55555555555555555</p>\n', 5, '555', 16, 'selenium', '2020-01-28 17:44:52', 1);
 INSERT INTO `article` VALUES (3006, '在家好无聊', '<p><strong>武汉加油</strong></p>\n', 5, '555', 16, 'selenium', '2020-02-11 12:22:10', 0);
 INSERT INTO `article` VALUES (3007, '111111111111', '<p>222222222222222222</p>\n', 4, '4444', 16, 'selenium', '2020-03-02 06:46:21', 0);
+INSERT INTO `article` VALUES (3008, '888888888', '<p>888888888888</p>\n', 5, '555', 50, 'aaaa', '2020-03-11 15:19:05', 0);
+INSERT INTO `article` VALUES (3009, '99999999', '<p>999999999999999</p>\n', 5, '555', 50, 'aaaa', '2020-03-11 15:19:31', 0);
+INSERT INTO `article` VALUES (3010, '666', '<p>666</p>\n', 6, '666', 16, 'selenium', '2020-03-16 17:23:19', 0);
+INSERT INTO `article` VALUES (3011, '测试文章', '<p>测试测试测试</p>\n', 7, '测试板块', 16, 'selenium', '2020-03-16 17:40:26', 0);
+INSERT INTO `article` VALUES (3012, '123213123', '<p>23123123</p>\n', 12, '板块???', 16, 'selenium', '2020-03-16 19:46:25', 0);
 
 -- ----------------------------
 -- Table structure for block
@@ -3067,16 +3072,22 @@ CREATE TABLE `block`  (
   UNIQUE INDEX `unique_index_title`(`title`) USING BTREE COMMENT '板块标题必须唯一',
   INDEX `author`(`author_id`) USING BTREE,
   CONSTRAINT `fk_block_user_author_id` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of block
 -- ----------------------------
-INSERT INTO `block` VALUES (1, '/common/images/avatar/default.jpg', '1111', 16, 'selenium', 0, 0, '2019-09-05 00:30:01');
-INSERT INTO `block` VALUES (2, '/common/images/avatar/default.jpg', '222233', 16, 'selenium', 0, 0, '2019-09-22 12:17:03');
-INSERT INTO `block` VALUES (3, '/common/images/avatar/default.jpg', '3333', 16, 'selenium', 0, 0, '2019-09-02 12:17:13');
+INSERT INTO `block` VALUES (1, '/common/images/avatar/default.jpg', '1111', 16, 'selenium', 100, 200, '2019-09-05 00:30:01');
+INSERT INTO `block` VALUES (2, '/common/images/avatar/default.jpg', '222233', 16, 'selenium', 0, -1, '2019-09-22 12:17:03');
+INSERT INTO `block` VALUES (3, '/common/images/avatar/default.jpg', '3333', 16, 'selenium', 0, 1, '2019-09-02 12:17:13');
 INSERT INTO `block` VALUES (4, '/common/images/avatar/default.jpg', '4444', 16, 'selenium', 0, 0, '2019-10-29 12:17:16');
-INSERT INTO `block` VALUES (5, '/common/images/avatar/default.jpg', '555', 16, 'selenium', 0, 0, '2019-09-03 12:17:21');
+INSERT INTO `block` VALUES (5, '/common/images/avatar/default.jpg', '555', 16, 'selenium', 2, 0, '2019-09-03 12:17:21');
+INSERT INTO `block` VALUES (6, '/common/images/avatar/default.jpg', '666', 16, 'selenium', 7, 6, '2019-09-03 12:17:21');
+INSERT INTO `block` VALUES (7, '/common/images/avatar/1584357719424_img-4ec8fe1e117fe8b7e6b4be81ce8c11b9.jpg', '测试板块', 16, 'selenium', 1, 0, '2020-03-16 17:39:12');
+INSERT INTO `block` VALUES (9, '/common/images/avatar/1584357712552_img-4ec8fe1e117fe8b7e6b4be81ce8c11b9.jpg', '888', 16, 'selenium', 0, 0, '2020-03-16 17:46:21');
+INSERT INTO `block` VALUES (10, '/common/images/block/1584356789598_img-7831b3fa2e7baa721ca5e82d25345c29.jpg', '000', 16, 'selenium', 0, 0, '2020-03-16 19:06:29');
+INSERT INTO `block` VALUES (11, '/common/images/avatar/1584357634202_img-7831b3fa2e7baa721ca5e82d25345c29.jpg', '131321', 16, 'selenium', 0, 0, '2020-03-16 19:06:46');
+INSERT INTO `block` VALUES (12, '/common/images/avatar/default.jpg', '板块???', 16, 'selenium', 1, 0, '2020-03-16 19:20:20');
 
 -- ----------------------------
 -- Table structure for comment
@@ -3095,7 +3106,7 @@ CREATE TABLE `comment`  (
   INDEX `fk_comment_user`(`user_id`) USING BTREE,
   CONSTRAINT `fk_comment_article` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_comment_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 71 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 77 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of comment
@@ -3180,7 +3191,7 @@ CREATE TABLE `feature`  (
 -- Records of feature
 -- ----------------------------
 INSERT INTO `feature` VALUES (1, '留言板', '来这里留下你的足迹吧!', '/common/images/function/message-board.jpg', '/common/images/function/message-board.jpg', 'message');
-INSERT INTO `feature` VALUES (2, '留言板', '来这里留下你的足迹吧!', '/common/images/function/message-board.jpg', '/common/images/function/message-board.jpg', 'message');
+INSERT INTO `feature` VALUES (2, '二维码', '生成二维码', '/common/images/function/qr.jpg', '/common/images/function/qr.jpg', 'qr');
 INSERT INTO `feature` VALUES (3, '留言板', '来这里留下你的足迹吧!', '/common/images/function/message-board.jpg', '/common/images/function/message-board.jpg', 'message');
 INSERT INTO `feature` VALUES (4, '留言板', '来这里留下你的足迹吧!', '/common/images/function/message-board.jpg', '/common/images/function/message-board.jpg', 'message');
 INSERT INTO `feature` VALUES (5, '留言板', '来这里留下你的足迹吧!', '/common/images/function/message-board.jpg', '/common/images/function/message-board.jpg', 'message');
@@ -3271,7 +3282,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (16, 'selenium', '3a42503923d841ac9b7ec83eed03b450', '1d2d383-f', 20, 1, '895484122@qq.com', '00000000000', '/common/images/avatar/default.jpg', '2019-09-01 23:37:49', '2019-09-01 23:37:49', 0, 1);
+INSERT INTO `user` VALUES (16, 'selenium', '3a42503923d841ac9b7ec83eed03b450', '1d2d383-f', 20, 0, '895484122@qq.com', '11111111111', '/common/images/avatar/1584557850109_3_niangou0915_1552211185.jpg', '2019-09-01 23:37:49', '2019-09-01 23:37:49', 0, 1);
 INSERT INTO `user` VALUES (29, '23444444', 'e146c0d93aefe07f571292a504818331', '34d474c-9', 0, 2, '895484122111@qq.com2', '00000000000', '/common/images/avatar/default.jpg', '2019-09-04 23:04:53', '2019-09-04 23:04:53', 0, 0);
 INSERT INTO `user` VALUES (36, '1234', '4d88a64bd0151dffd3d466ba545a7590', 'b8c559b-0', 0, 2, '895484122123123123@qq.com', '00000000000', '/common/images/avatar/default.jpg', '2019-09-05 00:30:01', '2019-09-05 00:30:01', 0, 0);
 INSERT INTO `user` VALUES (37, 'zhangxiya', 'e7035ecc1b8923d3fe87f184d14b09c6', '7d47119-a', 0, 2, 'zhangxiya@qq.com', '00000000000', '/common/images/avatar/default.jpg', '2019-09-05 00:41:02', '2019-09-05 00:41:02', 0, 0);
@@ -3283,7 +3294,7 @@ INSERT INTO `user` VALUES (44, '3123123', 'fc18e58236dab5c9b4fd5f821ef14b28', '4
 INSERT INTO `user` VALUES (46, 'selenium231', '2d9a97fa7c1d0c8496cf4b4998c699da', '441e2d5-4', 0, 2, '895484122@qq.com2313', '00000000000', '/common/images/avatar/default.jpg', '2019-09-07 21:38:36', '2019-09-07 21:38:36', 0, 0);
 INSERT INTO `user` VALUES (47, 'selenium123', '3406f96090d6724155fe805b6208c863', 'ab16a3c-0', 0, 2, '89548412123122@qq.com', '00000000000', '/common/images/avatar/1579445001222_img-4ec8fe1e117fe8b7e6b4be81ce8c11b9.jpg', '2019-09-07 21:47:27', '2019-09-07 21:47:27', 0, 0);
 INSERT INTO `user` VALUES (49, 'selenium222', '9cafb14e25927ce21944da04f31b057a', '3ff3494-5', 0, 2, '895484122222@qq.com', '00000000000', '/common/images/avatar/1579445198895_touxiang.jpg', '2019-09-21 10:53:15', '2019-09-21 10:53:15', 1, 0);
-INSERT INTO `user` VALUES (50, 'aaaa', '0977f9ab7e9653f2a5b0792c715dc603', '53bf7ee-2', 0, 2, '897632122@qq.com', '00000000000', '/common/images/avatar/1579445094503_touxiang.jpg', '2019-10-01 12:10:01', '2019-10-01 12:10:01', 1, 0);
-INSERT INTO `user` VALUES (51, 'aaaa1', '73021ad0ac074040aeae05831443330b', 'c4b4a20-c', 0, 2, '2132222@qq.com', '00000000000', '/common/images/avatar/1579442632083_touxiang.jpg', '2019-10-01 12:11:58', '2019-10-01 12:11:58', 1, 0);
+INSERT INTO `user` VALUES (50, 'aaaa', '3290a337f9bdb717f3acc42516e103cb', '327292e-d', 0, 2, '897632122@qq.com', '00000000000', '/common/images/avatar/1579445094503_touxiang.jpg', '2019-10-01 12:10:01', '2019-10-01 12:10:01', 0, 0);
+INSERT INTO `user` VALUES (51, 'aaaa3', '73021ad0ac074040aeae05831443330b', 'c4b4a20-c', 0, 2, '2132222@qq.com', '00000000000', '/common/images/avatar/1579442632083_touxiang.jpg', '2019-10-01 12:11:58', '2019-10-01 12:11:58', 1, 0);
 
 SET FOREIGN_KEY_CHECKS = 1;
