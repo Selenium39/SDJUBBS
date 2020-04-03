@@ -21,8 +21,11 @@ public interface ArticleMapper {
 
     Integer updateArticle(Article article);
 
+    Integer addArticleSeeNum(int id);
+
     Integer deleteArticle(Integer id);
 
     Integer deleteArticleByBatch(List<Integer> ids);
+
 
 }

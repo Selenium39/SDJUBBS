@@ -36,6 +36,7 @@ public class SpiderUtil {
             //log.info("html: " + html);
         } catch (IOException e) {
             e.printStackTrace();
+            return "";
         }
         Document document = Jsoup.parse(html);
         Element element = document.getElementById("wp_news_w6");

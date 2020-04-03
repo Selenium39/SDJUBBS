@@ -53,6 +53,12 @@ public class ArticleService implements ArticleMapper {
 
     @Override
     @Transactional(rollbackFor = {Exception.class})
+    public Integer addArticleSeeNum(int id) {
+        return articleMapper.addArticleSeeNum(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
     public Integer deleteArticle(Integer id) {
         return articleMapper.deleteArticle(id);
     }
@@ -62,6 +68,7 @@ public class ArticleService implements ArticleMapper {
     public Integer deleteArticleByBatch(List<Integer> ids) {
         return articleMapper.deleteArticleByBatch(ids);
     }
+
 
 
 }

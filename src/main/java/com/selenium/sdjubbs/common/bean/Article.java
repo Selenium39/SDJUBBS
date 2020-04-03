@@ -19,6 +19,7 @@ public class Article implements Serializable {
     private String authorName;
     private String createTime;
     private Integer priority;
+    private Integer seeNum;
 
     public Article() {
     }

@@ -64,9 +64,11 @@ public class AdminApiController {
             @ApiImplicitParam(name = "limit", value = "每页记录数", required = true, example = "10"),
             @ApiImplicitParam(name = "order", value = "排序", required = false, example = "id asc"),
     })
-    protected Result getAllUser(String name, String sessionId, String page, String limit, String order) {
+    protected Result getAllUser(String name, String sessionId, String page, String limit, String order, String search) {
         int pageSize = 0;
         int pageNum = 0;
+        List<User> users = null;
+        PageInfo<User> pageInfo = null;
         try {
             pageSize = Integer.valueOf(limit);
             pageNum = Integer.valueOf(page);
@@ -77,8 +79,16 @@ public class AdminApiController {
         }
         //获取第pageNum页,pageSize条内容
         PageHelper.startPage(pageNum, pageSize, order);
-        List<User> users = userService.getAllUser();
-        PageInfo<User> pageInfo = new PageInfo<User>(users);
+        log.info("search: "+search);
+        if (search == null || "".equalsIgnoreCase(search)) {
+            log.info("显示所有");
+            users = userService.getAllUser();
+            pageInfo = new PageInfo<User>(users);
+        }else{
+            log.info("查找");
+            users = userService.getAllUser();
+            pageInfo = new PageInfo<User>(users);
+        }
         if (users == null) {
             return Result.failure("暂时没有用户");
         }

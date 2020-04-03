@@ -223,7 +223,14 @@ public class ApiController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "文章id", required = true, example = "1"),
     })
-    public Result getArticle(@PathVariable("id") int id) {
+    public Result getArticle(@PathVariable("id") int id, HttpServletRequest request) {
+        String ip = MD5Util.md5(request.getRemoteAddr()).substring(0, 10);
+        Boolean hasKey = redisService.hasKey("article:" + id + ":" + ip);
+        if (!hasKey) {
+            articleService.addArticleSeeNum(id);
+            //5分钟内同一个ip不能给同一片文章增加浏览量
+            redisService.set("article:" + id + ":" + ip, "1", 300);
+        }
         Article article = articleService.getArticleById(id);
         List<Comment> comments = commentService.getCommentByArticleId(id);
         return Result.success().add("article", article).add("comments", comments);

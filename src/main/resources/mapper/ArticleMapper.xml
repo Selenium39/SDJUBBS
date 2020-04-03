@@ -6,25 +6,25 @@
         values (#{title},#{content},#{blockId},#{blockName},#{authorId},#{authorName},#{createTime},#{priority})
     </insert>
     <select id="getArticleById" parameterType="Integer" resultType="Article">
-        select id,title,content,block_id,block_name,author_id,author_name,create_time,priority
+        select id,title,content,block_id,block_name,author_id,author_name,create_time,priority,see_num
         from article
         where id = #{id}
     </select>
     <select id="getAllArticleByBlockId" parameterType="Integer" resultType="Article">
-        select id,title,content,block_id,block_name,author_id,author_name,create_time,priority
+        select id,title,content,block_id,block_name,author_id,author_name,create_time,priority,see_num
         from article
         where block_id = #{id}
         order by priority desc,create_time desc
     </select>
     <select id="getAllArticleByBlockIdAndSearch"  resultType="Article">
-        select id,title,content,block_id,block_name,author_id,author_name,create_time,priority
+        select id,title,content,block_id,block_name,author_id,author_name,create_time,priority,see_num
         from article
         where block_id = #{blockId}
         and title  like concat(concat('%',#{search}),'%')
         order by priority desc,create_time desc
     </select>
     <select id="getAllArticle" resultType="Article">
-        select id,title,content,block_id,block_name,author_id,author_name,create_time,priority
+        select id,title,content,block_id,block_name,author_id,author_name,create_time,priority,see_num
         from article
     </select>
     <update id="updateArticle" parameterType="Article">
@@ -51,6 +51,20 @@
             <if test="priority!=null">
                 priority = #{priority}
             </if>
+            <if test="seeNum!=null">
+                see_num = #{seeNum}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="addArticleSeeNum">
+        update article
+        <set>
+            <if test="id!=null">
+                id = #{id},
+            </if>
+            see_num = see_num+1
         </set>
         where id = #{id}
     </update>
