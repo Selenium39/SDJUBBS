@@ -36,6 +36,11 @@ public class CommentService implements CommentMapper {
         return commentMapper.getAllComment();
     }
 
+    @Override
+    public List<Comment> getAllCommentBySearch(String search) {
+        return commentMapper.getAllCommentBySearch(search);
+    }
+
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public Integer deleteComment(Integer id) {

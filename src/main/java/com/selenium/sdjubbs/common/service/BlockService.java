@@ -21,6 +21,13 @@ public class BlockService implements BlockMapper {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Block> getAllBlockBySearch(String search) {
+        return blockMapper.getAllBlockBySearch(search);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<Block> getAllBlockForUser() {
         return blockMapper.getAllBlockForUser();
     }
@@ -32,11 +39,13 @@ public class BlockService implements BlockMapper {
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public Integer updateBlock(Block block) {
         return blockMapper.updateBlock(block);
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public Integer addBlock(Block block) {
         return blockMapper.addBlock(block);
     }

@@ -79,14 +79,11 @@ public class AdminApiController {
         }
         //获取第pageNum页,pageSize条内容
         PageHelper.startPage(pageNum, pageSize, order);
-        log.info("search: "+search);
         if (search == null || "".equalsIgnoreCase(search)) {
-            log.info("显示所有");
             users = userService.getAllUser();
             pageInfo = new PageInfo<User>(users);
-        }else{
-            log.info("查找");
-            users = userService.getAllUser();
+        } else {
+            users = userService.getAllUserBySearch(search);
             pageInfo = new PageInfo<User>(users);
         }
         if (users == null) {
@@ -318,9 +315,11 @@ public class AdminApiController {
             @ApiImplicitParam(name = "limit", value = "每页记录数", required = true, example = "10"),
             @ApiImplicitParam(name = "order", value = "排序", required = false, example = "id asc"),
     })
-    protected Result getAllArticle(String name, String sessionId, String page, String limit, String order) {
+    protected Result getAllArticle(String name, String sessionId, String page, String limit, String order, String search) {
         int pageSize = 0;
         int pageNum = 0;
+        List<Article> articles = null;
+        PageInfo<Article> pageInfo = null;
         try {
             pageSize = Integer.valueOf(limit);
             pageNum = Integer.valueOf(page);
@@ -331,8 +330,13 @@ public class AdminApiController {
         }
         //获取第pageNum页,pageSize条内容
         PageHelper.startPage(pageNum, pageSize, order);
-        List<Article> articles = articleService.getAllArticle();
-        PageInfo<Article> pageInfo = new PageInfo<>(articles);
+        if (search == null || "".equalsIgnoreCase(search)) {
+            articles = articleService.getAllArticle();
+            pageInfo = new PageInfo<>(articles);
+        } else {
+            articles = articleService.getAllArticleBySearch(search);
+            pageInfo = new PageInfo<>(articles);
+        }
         if (articles == null) {
             return Result.failure("暂时没有文章");
         }
@@ -422,9 +426,11 @@ public class AdminApiController {
             @ApiImplicitParam(name = "limit", value = "每页记录数", required = true, example = "10"),
             @ApiImplicitParam(name = "order", value = "排序", required = false, example = "id asc"),
     })
-    protected Result getAllBlock(String name, String sessionId, String page, String limit, String order) {
+    protected Result getAllBlock(String name, String sessionId, String page, String limit, String order, String search) {
         int pageSize = 0;
         int pageNum = 0;
+        List<Block> blocks = null;
+        PageInfo<Block> pageInfo = null;
         try {
             pageSize = Integer.valueOf(limit);
             pageNum = Integer.valueOf(page);
@@ -435,8 +441,13 @@ public class AdminApiController {
         }
         //获取第pageNum页,pageSize条内容
         PageHelper.startPage(pageNum, pageSize, order);
-        List<Block> blocks = blockService.getAllBlock();
-        PageInfo<Block> pageInfo = new PageInfo<>(blocks);
+        if (search == null || "".equalsIgnoreCase(search)) {
+            blocks = blockService.getAllBlock();
+            pageInfo = new PageInfo<>(blocks);
+        } else {
+            blocks = blockService.getAllBlockBySearch(search);
+            pageInfo = new PageInfo<>(blocks);
+        }
         if (blocks == null) {
             return Result.failure("暂时没有板块");
         }
@@ -635,9 +646,12 @@ public class AdminApiController {
             @ApiImplicitParam(name = "limit", value = "每页记录数", required = true, example = "10"),
             @ApiImplicitParam(name = "order", value = "排序", required = false, example = "id asc"),
     })
-    protected Result getAllComment(String name, String sessionId, String page, String limit, String order) {
+    protected Result getAllComment(String name, String sessionId, String page, String limit, String order, String search) {
         int pageSize = 0;
         int pageNum = 0;
+        List<Comment> comments = null;
+        PageInfo<Comment> pageInfo = null;
+
         try {
             pageSize = Integer.valueOf(limit);
             pageNum = Integer.valueOf(page);
@@ -648,8 +662,13 @@ public class AdminApiController {
         }
         //获取第pageNum页,pageSize条内容
         PageHelper.startPage(pageNum, pageSize, order);
-        List<Comment> comments = commentService.getAllComment();
-        PageInfo<Comment> pageInfo = new PageInfo<>(comments);
+        if (search == null || "".equalsIgnoreCase(search)) {
+            comments = commentService.getAllComment();
+            pageInfo = new PageInfo<>(comments);
+        } else {
+            comments = commentService.getAllCommentBySearch(search);
+            pageInfo = new PageInfo<>(comments);
+        }
         if (comments == null) {
             return Result.failure("暂时没有评论");
         }
@@ -738,5 +757,14 @@ public class AdminApiController {
         FileUtil.deleteAllFilesUnderDir(savePath);
         return Result.success();
     }
+
+    //---------------------------服务器信息管理----------------------------------
+    @GetMapping(Api.SERVER_SYSTEM_INFO)
+    @ApiOperation(value = "获取系统信息")
+    protected Result getSystemInfo(String name, String sessionId) {
+        SystemInfo systemInfo = ServerInfoUtil.getSystemInfo();
+        return Result.success().add("systemInfo", systemInfo);
+    }
+
 
 }

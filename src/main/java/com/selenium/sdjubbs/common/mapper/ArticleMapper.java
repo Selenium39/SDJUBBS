@@ -19,6 +19,8 @@ public interface ArticleMapper {
 
     List<Article> getAllArticle();
 
+    List<Article> getAllArticleBySearch(String search);
+
     Integer updateArticle(Article article);
 
     Integer addArticleSeeNum(int id);

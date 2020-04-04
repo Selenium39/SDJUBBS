@@ -20,6 +20,11 @@
         select id,content,create_time,article_id,user_id,user_name,status
          from comment
     </select>
+    <select id="getAllCommentBySearch" resultType="Comment">
+        select id,content,create_time,article_id,user_id,user_name,status
+        from comment
+        where content like concat(concat('%',#{search}),'%')
+    </select>
     <update id="updateComment" parameterType="Comment">
         update comment
         <set>

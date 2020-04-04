@@ -22,4 +22,6 @@ public interface UserMapper {
     Integer deleteUserByBatch(List<Integer> ids);
 
     List<User> getAllUser();
+
+    List<User> getAllUserBySearch(String search);
 }

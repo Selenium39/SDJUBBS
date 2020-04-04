@@ -15,6 +15,8 @@ public interface CommentMapper {
 
     List<Comment> getAllComment();
 
+    List<Comment> getAllCommentBySearch(String search);
+
     Integer deleteComment(Integer id);
 
     Integer updateComment(Comment comment);

@@ -21,6 +21,11 @@
         select id,username,age,gender,email,phone,head_picture,register_time,last_login_time,status,role
         from user
     </select>
+    <select id="getAllUserBySearch" resultType="User">
+        select id,username,age,gender,email,phone,head_picture,register_time,last_login_time,status,role
+        from user
+        where username like concat(concat('%',#{search}),'%')
+    </select>
     <select id="getUserById" parameterType="Integer" resultType="User">
         select username,password,salt,age,gender,email,phone,head_picture,register_time,last_login_time,status,role
         from user

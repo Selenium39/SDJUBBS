@@ -62,5 +62,11 @@ public class UserService implements UserMapper {
         return userMapper.getAllUser();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<User> getAllUserBySearch(String search) {
+        return userMapper.getAllUserBySearch(search);
+    }
+
 
 }

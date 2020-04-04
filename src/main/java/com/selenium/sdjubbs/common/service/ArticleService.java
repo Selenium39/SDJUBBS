@@ -46,6 +46,11 @@ public class ArticleService implements ArticleMapper {
     }
 
     @Override
+    public List<Article> getAllArticleBySearch(String search) {
+        return articleMapper.getAllArticleBySearch(search);
+    }
+
+    @Override
     @Transactional(rollbackFor = {Exception.class})
     public Integer updateArticle(Article article) {
         return articleMapper.updateArticle(article);

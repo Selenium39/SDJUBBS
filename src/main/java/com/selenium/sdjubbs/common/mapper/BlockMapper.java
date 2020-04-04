@@ -9,6 +9,8 @@ import java.util.List;
 public interface BlockMapper {
     List<Block> getAllBlock();
 
+    List<Block> getAllBlockBySearch(String search);
+
     List<Block> getAllBlockForUser();
 
     Block getBlockById(int id);

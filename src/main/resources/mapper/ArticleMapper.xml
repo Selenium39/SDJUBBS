@@ -27,6 +27,11 @@
         select id,title,content,block_id,block_name,author_id,author_name,create_time,priority,see_num
         from article
     </select>
+    <select id="getAllArticleBySearch" resultType="Article">
+        select id,title,content,block_id,block_name,author_id,author_name,create_time,priority,see_num
+        from article
+        where title like concat(concat('%',#{search}),'%')
+    </select>
     <update id="updateArticle" parameterType="Article">
         update article
         <set>
