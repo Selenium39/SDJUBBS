@@ -55,4 +55,10 @@ public class MessageService implements MessageMapper {
     public Integer getNewMessageCount() {
         return messageMapper.getNewMessageCount();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Integer getMessageCount() {
+        return messageMapper.getMessageCount();
+    }
 }

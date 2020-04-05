@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.selenium.sdjubbs.common.api.Api;
 import com.selenium.sdjubbs.common.bean.*;
 import com.selenium.sdjubbs.common.config.SdjubbsSetting;
+import com.selenium.sdjubbs.common.myenum.Counter;
 import com.selenium.sdjubbs.common.service.*;
 import com.selenium.sdjubbs.common.util.*;
 import io.swagger.annotations.ApiImplicitParam;
@@ -29,9 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -54,6 +53,8 @@ public class AdminApiController {
     private MessageService messageService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private ReplyService replyService;
 
     @GetMapping(Api.USER)
     @ApiOperation(value = "获取所有的用户")
@@ -764,6 +765,49 @@ public class AdminApiController {
     protected Result getSystemInfo(String name, String sessionId) {
         SystemInfo systemInfo = ServerInfoUtil.getSystemInfo();
         return Result.success().add("systemInfo", systemInfo);
+    }
+
+    //----------------------------echarts图表显示-----------------
+
+    @GetMapping(Api.STATISTICS_COUNT_INFO)
+    @ApiOperation(value = "获取数量信息")
+    protected Result getCountInfo(String name, String sessionId) {
+        Map infos = new HashMap<String, Integer>();
+        infos.put(Counter.USER.getName(), userService.getUserCount());
+        infos.put(Counter.MESSAGE.getName(), messageService.getMessageCount());
+        infos.put(Counter.BLOCK.getName(), blockService.getBlockCount());
+        infos.put(Counter.ARTICLE.getName(), articleService.getArticleCount());
+        infos.put(Counter.COMMENT.getName(), commentService.getCommentCount());
+        infos.put(Counter.REPLEY.getName(), replyService.getReplyCount());
+        return Result.success().add("infos", infos);
+    }
+
+    @GetMapping(Api.STATISTICS_REGISTER_INFO)
+    @ApiOperation(value = "获取注册用户信息")
+    protected Result getRegisterUserInfo(String name, String sessionId, int num) {
+        List<RegisterUserInfo> infos = userService.getUserOrderByRegisterTime(num);
+        return Result.success().add("infos", infos);
+    }
+
+    @GetMapping(Api.STATISTICS_LOGIN_INFO)
+    @ApiOperation(value = "获取登录信息")
+    protected Result getLoginUserInfo(String name, String sessionId, int num) {
+        List<LoginUserInfo> infos = userService.getUserOrderByLoginTime(num);
+        return Result.success().add("infos", infos);
+    }
+
+    @GetMapping(Api.STATISTICS_MEMORY_INFO)
+    @ApiOperation(value = "获取内存信息")
+    protected Result getMemoryInfo(String name, String sessionId) {
+        MemoryInfo memoryInfo = ServerInfoUtil.getMemoryInfo();
+        return Result.success().add("infos", memoryInfo);
+    }
+
+    @GetMapping(Api.STATISTICS_CPU_INFO)
+    @ApiOperation(value = "获取CPU信息")
+    protected Result getCPUInfo(String name, String sessionId) {
+        List<CPUInfo> cpuInfos = ServerInfoUtil.getCPUInfos();
+        return Result.success().add("infos", cpuInfos);
     }
 
 

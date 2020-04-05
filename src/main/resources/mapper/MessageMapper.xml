@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.selenium.sdjubbs.common.mapper.MessageMapper">
+    <select id="getMessageCount" resultType="Integer">
+        select count(*)
+        from message
+    </select>
     <select id="getAllMessage" resultType="Message">
         select id,content,time,status
         from message

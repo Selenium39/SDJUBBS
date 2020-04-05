@@ -1,5 +1,7 @@
 package com.selenium.sdjubbs.common.service;
 
+import com.selenium.sdjubbs.common.bean.LoginUserInfo;
+import com.selenium.sdjubbs.common.bean.RegisterUserInfo;
 import com.selenium.sdjubbs.common.bean.User;
 import com.selenium.sdjubbs.common.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +68,24 @@ public class UserService implements UserMapper {
     @Transactional(readOnly = true)
     public List<User> getAllUserBySearch(String search) {
         return userMapper.getAllUserBySearch(search);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RegisterUserInfo> getUserOrderByRegisterTime(int num) {
+        return userMapper.getUserOrderByRegisterTime(num);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<LoginUserInfo> getUserOrderByLoginTime(int num) {
+        return userMapper.getUserOrderByLoginTime(num);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Integer getUserCount() {
+        return userMapper.getUserCount();
     }
 
 

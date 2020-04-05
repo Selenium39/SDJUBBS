@@ -74,6 +74,11 @@ public class ArticleService implements ArticleMapper {
         return articleMapper.deleteArticleByBatch(ids);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Integer getArticleCount() {
+        return articleMapper.getArticleCount();
+    }
 
 
 }

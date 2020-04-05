@@ -1,5 +1,7 @@
 package com.selenium.sdjubbs.common.mapper;
 
+import com.selenium.sdjubbs.common.bean.LoginUserInfo;
+import com.selenium.sdjubbs.common.bean.RegisterUserInfo;
 import com.selenium.sdjubbs.common.bean.User;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -24,4 +26,11 @@ public interface UserMapper {
     List<User> getAllUser();
 
     List<User> getAllUserBySearch(String search);
+
+    List<RegisterUserInfo> getUserOrderByRegisterTime(int num);
+
+    List<LoginUserInfo> getUserOrderByLoginTime(int num);
+
+    Integer getUserCount();
+
 }

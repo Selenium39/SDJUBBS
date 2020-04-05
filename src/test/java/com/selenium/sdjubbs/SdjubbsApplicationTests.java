@@ -1,9 +1,6 @@
 package com.selenium.sdjubbs;
 
-import com.selenium.sdjubbs.common.bean.Article;
-import com.selenium.sdjubbs.common.bean.Comment;
-import com.selenium.sdjubbs.common.bean.Reply;
-import com.selenium.sdjubbs.common.bean.User;
+import com.selenium.sdjubbs.common.bean.*;
 import com.selenium.sdjubbs.common.config.SdjubbsSetting;
 import com.selenium.sdjubbs.common.service.ArticleService;
 import com.selenium.sdjubbs.common.service.CommentService;
@@ -91,7 +88,7 @@ public class SdjubbsApplicationTests {
 
     @Test
     public void addUser() {
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10; i++) {
             User user = new User();
             user.setUsername(UUID.randomUUID().toString().substring(0, 7));
             user.setStatus(0);
@@ -116,6 +113,15 @@ public class SdjubbsApplicationTests {
     public void deleteAllFilesUnderDir() {
         String savePath = System.getProperty("user.dir") + setting.getQrSavePath();
         FileUtil.deleteAllFilesUnderDir(savePath);
+    }
+
+    @Test
+    public void getRegisterUserInfo(){
+        List<RegisterUserInfo> users = userService.getUserOrderByRegisterTime(1000);
+        for(RegisterUserInfo user:users){
+            log.info("============================================");
+            log.info("time:"+user.getTime()+" num"+user.getNum());
+        }
     }
 
 }

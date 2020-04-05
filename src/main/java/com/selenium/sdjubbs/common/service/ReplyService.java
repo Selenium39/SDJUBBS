@@ -24,4 +24,10 @@ public class ReplyService implements ReplyMapper {
     public List<Reply> getReplyByCommentId(Integer commentId) {
         return replyMapper.getReplyByCommentId(commentId);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Integer getReplyCount() {
+        return replyMapper.getReplyCount();
+    }
 }

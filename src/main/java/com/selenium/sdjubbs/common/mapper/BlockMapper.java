@@ -18,4 +18,6 @@ public interface BlockMapper {
     Integer updateBlock(Block block);
 
     Integer addBlock(Block block);
+
+    Integer getBlockCount();
 }

@@ -9,4 +9,5 @@ import java.util.List;
 public interface ReplyMapper {
     Integer addReply(Reply reply);
     List<Reply> getReplyByCommentId(Integer commentId);
+    Integer getReplyCount();
 }

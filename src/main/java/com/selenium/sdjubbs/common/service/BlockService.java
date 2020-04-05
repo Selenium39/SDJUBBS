@@ -50,5 +50,11 @@ public class BlockService implements BlockMapper {
         return blockMapper.addBlock(block);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Integer getBlockCount() {
+        return blockMapper.getBlockCount();
+    }
+
 
 }

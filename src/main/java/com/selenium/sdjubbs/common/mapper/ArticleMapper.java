@@ -29,5 +29,7 @@ public interface ArticleMapper {
 
     Integer deleteArticleByBatch(List<Integer> ids);
 
+    Integer getArticleCount();
+
 
 }

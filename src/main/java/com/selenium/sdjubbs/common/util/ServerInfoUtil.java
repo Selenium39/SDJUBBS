@@ -1,10 +1,15 @@
 package com.selenium.sdjubbs.common.util;
 
+import com.selenium.sdjubbs.common.bean.CPUInfo;
+import com.selenium.sdjubbs.common.bean.MemoryInfo;
 import com.selenium.sdjubbs.common.bean.SystemInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.hyperic.sigar.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -56,4 +61,60 @@ public class ServerInfoUtil {
         }
         return systemInfo;
     }
+
+    //内存信息
+    public static MemoryInfo getMemoryInfo() {
+        MemoryInfo memoryInfo = null;
+        Sigar sigar = new Sigar();
+        Long total;
+        Long used;
+        Long free;
+        Mem mem = null;
+        try {
+            mem = sigar.getMem();
+            total = mem.getTotal() / 1024L;
+            used = mem.getUsed() / 1024L;
+            free = mem.getFree() / 1024L;
+            // 内存总量
+            //log.info("内存总量:    " + total + "K av");
+            // 当前内存使用量
+            // log.info("当前内存使用量:    " + used + "K used");
+            // 当前内存剩余量
+            //log.info("当前内存剩余量:    " + free + "K free");
+            memoryInfo = new MemoryInfo(total, used, free);
+        } catch (SigarException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return memoryInfo;
+    }
+
+    public static List<CPUInfo> getCPUInfos() {
+        List<CPUInfo> cpuInfos = null;
+        Sigar sigar = new Sigar();
+        CpuInfo infos[] = null;
+        CpuPerc cpuList[] = null;
+        try {
+            infos = sigar.getCpuInfoList();
+            cpuList = sigar.getCpuPercList();
+            cpuInfos = new ArrayList<>();
+            for (int i = 0; i < infos.length; i++) {// 不管是单块CPU还是多CPU都适用
+                log.info("第" + (i + 1) + "块CPU信息");
+                CpuPerc cpu = cpuList[i];
+                int id = i + 1;
+                String userUsed = CpuPerc.format(cpu.getUser());
+                String systemUsed = CpuPerc.format(cpu.getSys());
+                String wait = CpuPerc.format(cpu.getWait());
+                String error = CpuPerc.format(cpu.getNice());
+                String free = CpuPerc.format(cpu.getIdle());
+                CPUInfo cpuInfo = new CPUInfo(id, userUsed, systemUsed, wait, error, free);
+                cpuInfos.add(cpuInfo);
+            }
+        } catch (SigarException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return cpuInfos;
+    }
+
 }

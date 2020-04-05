@@ -18,4 +18,5 @@ public class FeatureService implements FeatureMapper {
     public List<Feature> getAllFeature() {
         return featureMapper.getAllFeature();
     }
+
 }

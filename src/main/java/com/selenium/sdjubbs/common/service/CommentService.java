@@ -65,4 +65,10 @@ public class CommentService implements CommentMapper {
         return commentMapper.getReportedCommentCount();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Integer getCommentCount() {
+        return commentMapper.getCommentCount();
+    }
+
 }

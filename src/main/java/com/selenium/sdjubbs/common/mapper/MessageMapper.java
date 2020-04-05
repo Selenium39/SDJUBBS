@@ -22,4 +22,6 @@ public interface MessageMapper {
     Integer deleteMessageByBatch(List<Integer> ids);
 
     Integer getNewMessageCount();
+
+    Integer getMessageCount();
 }
