@@ -62,6 +62,13 @@ spring:
         max-idle: 10
         max-wait: 3
     database: 0
+  #email-----------------------------------------------------------------
+  mail:
+    host: smtp.qq.com
+    username: selenium39@qq.com
+    password: rkkhyiejqoqlbfci
+    protocol: smtp
+    default-encoding: UTF-8
 
 
 #mybatis------------------------------------------------------------------
@@ -80,6 +87,7 @@ sdjubbs:
   article-image-save-path: ${base-dir-save-path}images/article
   qr-save-path: ${base-dir-save-path}images/qr
   block-picture-save-path: ${base-dir-save-path}images/block
+
 
 
 

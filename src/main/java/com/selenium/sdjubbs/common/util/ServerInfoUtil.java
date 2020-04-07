@@ -99,7 +99,7 @@ public class ServerInfoUtil {
             cpuList = sigar.getCpuPercList();
             cpuInfos = new ArrayList<>();
             for (int i = 0; i < infos.length; i++) {// 不管是单块CPU还是多CPU都适用
-                log.info("第" + (i + 1) + "块CPU信息");
+                //log.info("第" + (i + 1) + "块CPU信息");
                 CpuPerc cpu = cpuList[i];
                 int id = i + 1;
                 String userUsed = CpuPerc.format(cpu.getUser());

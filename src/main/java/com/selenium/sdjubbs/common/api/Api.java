@@ -32,4 +32,5 @@ public class Api {
     public static final String STATISTICS_COUNT_INFO = "/statistics/count/info";
     public static final String STATISTICS_MEMORY_INFO = "/statistics/memory/info";
     public static final String STATISTICS_CPU_INFO = "/statistics/cpu/info";
+    public static final String CHAT_ROOM = "/api/chat";
 }

@@ -12,8 +12,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -35,6 +41,8 @@ public class SdjubbsApplicationTests {
     private UserService userService;
     @Autowired
     private SdjubbsSetting setting;
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     @Test
     public void insertArticle() {
@@ -116,11 +124,36 @@ public class SdjubbsApplicationTests {
     }
 
     @Test
-    public void getRegisterUserInfo(){
+    public void getRegisterUserInfo() {
         List<RegisterUserInfo> users = userService.getUserOrderByRegisterTime(1000);
-        for(RegisterUserInfo user:users){
+        for (RegisterUserInfo user : users) {
             log.info("============================================");
-            log.info("time:"+user.getTime()+" num"+user.getNum());
+            log.info("time:" + user.getTime() + " num" + user.getNum());
+        }
+    }
+
+    @Test
+    public void sendEmail() {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setFrom("selenium39@qq.com");
+        simpleMailMessage.setSubject("邮件subject");
+        simpleMailMessage.setText("邮件text");
+        simpleMailMessage.setTo("wan.tao@cn.ricoh.com");
+        javaMailSender.send(simpleMailMessage);
+    }
+
+    @Test
+    public void sendHtmlEmail() {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+        try {
+            mimeMessageHelper.setSubject("主题test");
+            mimeMessageHelper.setFrom("selenium39@qq.com");
+            mimeMessageHelper.setTo("wan.tao@cn.ricoh.com");
+            mimeMessageHelper.setText("<h1>内容</h1>", true);
+            javaMailSender.send(mimeMessageHelper.getMimeMessage());
+        } catch (MessagingException e) {
+            e.printStackTrace();
         }
     }
 
