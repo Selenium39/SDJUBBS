@@ -36,12 +36,23 @@ public class WebSocketServer {
      */
     @OnOpen
     public void onOpen(Session session, @PathParam("name") String name, @PathParam("uuid") String uuid) {
-        //log.info("创建连接");
+        log.info("创建连接");
         this.session = session;
         this.name = name;
         this.uuid = uuid;
         count.incrementAndGet();
         servers.put(name + uuid, this);
+        try {
+            JSONObject result = new JSONObject();
+            result.put("count", count);
+            if (uuid != null && servers.containsKey(name+uuid)) {
+                for (WebSocketServer server : servers.values()) {
+                    server.session.getBasicRemote().sendText(result.toString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -58,11 +69,12 @@ public class WebSocketServer {
      */
     @OnMessage
     public void onMessage(String message) throws IOException {
+        log.info("onmessage: "+message);
         JSONObject result = new JSONObject();
         result.put("time", TimeUtil.getTime());
         result.put("message", message);
         result.put("name", name);
-        if (uuid != null && servers.containsKey(uuid)) {
+        if (uuid != null && servers.containsKey(name+uuid)) {
             for (WebSocketServer server : servers.values()) {
                 server.session.getBasicRemote().sendText(result.toString());
             }
@@ -71,7 +83,13 @@ public class WebSocketServer {
 
     @OnError
     public void onError(Session session, Throwable error) {
-
+        try {
+            JSONObject result = new JSONObject();
+            result.put("count", count);
+            session.getBasicRemote().sendText(result.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -11,7 +11,7 @@
  Target Server Version : 80017
  File Encoding         : 65001
 
- Date: 05/04/2020 15:51:34
+ Date: 08/04/2020 00:38:31
 */
 
 SET NAMES utf8mb4;
@@ -38,7 +38,7 @@ CREATE TABLE `article`  (
   INDEX `id`(`id`) USING BTREE,
   CONSTRAINT `fk_article_author` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_article_block` FOREIGN KEY (`block_id`) REFERENCES `block` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 3013 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3014 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of article
@@ -3108,7 +3108,7 @@ CREATE TABLE `comment`  (
   INDEX `fk_comment_user`(`user_id`) USING BTREE,
   CONSTRAINT `fk_comment_article` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_comment_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 77 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 78 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of comment
@@ -3188,14 +3188,14 @@ CREATE TABLE `feature`  (
   `back_image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of feature
 -- ----------------------------
 INSERT INTO `feature` VALUES (1, '留言板', '来这里留下你的足迹吧!', '/common/images/function/message-board.jpg', '/common/images/function/message-board.jpg', 'message');
 INSERT INTO `feature` VALUES (2, '二维码', '生成二维码', '/common/images/function/qr.jpg', '/common/images/function/qr.jpg', 'qr');
-INSERT INTO `feature` VALUES (3, '留言板', '来这里留下你的足迹吧!', '/common/images/function/message-board.jpg', '/common/images/function/message-board.jpg', 'message');
+INSERT INTO `feature` VALUES (3, '匿名聊天室', '大家一起来吐槽吧!', '/common/images/function/chatroom.png', '/common/images/function/chatroom.png', 'chat');
 INSERT INTO `feature` VALUES (4, '留言板', '来这里留下你的足迹吧!', '/common/images/function/message-board.jpg', '/common/images/function/message-board.jpg', 'message');
 INSERT INTO `feature` VALUES (5, '留言板', '来这里留下你的足迹吧!', '/common/images/function/message-board.jpg', '/common/images/function/message-board.jpg', 'message');
 
@@ -3209,7 +3209,7 @@ CREATE TABLE `message`  (
   `time` datetime(0) NOT NULL,
   `status` tinyint(255) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of message
