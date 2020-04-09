@@ -36,7 +36,7 @@ public class WebSocketServer {
      */
     @OnOpen
     public void onOpen(Session session, @PathParam("name") String name, @PathParam("uuid") String uuid) {
-        log.info("创建连接");
+        //log.info("创建连接");
         this.session = session;
         this.name = name;
         this.uuid = uuid;
@@ -62,6 +62,17 @@ public class WebSocketServer {
     public void onClose() {
         count.decrementAndGet();
         servers.remove(name + uuid);
+        if(servers.size()!=0){
+            JSONObject result = new JSONObject();
+            result.put("count", count);
+            for (WebSocketServer server : servers.values()) {
+                try {
+                    server.session.getBasicRemote().sendText(result.toString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**
@@ -69,7 +80,7 @@ public class WebSocketServer {
      */
     @OnMessage
     public void onMessage(String message) throws IOException {
-        log.info("onmessage: "+message);
+        //log.info("onmessage: "+message);
         JSONObject result = new JSONObject();
         result.put("time", TimeUtil.getTime());
         result.put("message", message);
