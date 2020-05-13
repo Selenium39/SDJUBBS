@@ -514,6 +514,9 @@ public class AdminApiController {
         article.setAuthorId(user.getId());
         article.setAuthorName(user.getUsername());
         article.setCreateTime(TimeUtil.getTime());
+        if (SensitiveWordUtil.checkSenstiveWord(System.getProperty("user.dir") + setting.getSensitiveWordPath(), article.getContent())) {
+            article.setContent(SensitiveWordUtil.filterInfoAfter(System.getProperty("user.dir") + setting.getSensitiveWordPath(), article.getContent()));
+        }
         articleService.addArticle(article);
         block.setArticleNum(block.getArticleNum() + 1);
         blockService.updateBlock(block);

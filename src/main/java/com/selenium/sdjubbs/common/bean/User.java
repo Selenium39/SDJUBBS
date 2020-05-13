@@ -35,5 +35,4 @@ public class User implements Serializable {
     private String lastLoginTime;
     private Integer status;
     private Integer role;
-
 }

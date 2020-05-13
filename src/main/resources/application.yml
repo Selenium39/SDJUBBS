@@ -87,6 +87,7 @@ sdjubbs:
   article-image-save-path: ${base-dir-save-path}images/article
   qr-save-path: ${base-dir-save-path}images/qr
   block-picture-save-path: ${base-dir-save-path}images/block
+  sensitive-words-path: ${base-dir-save-path}words/words.txt
 
 
 

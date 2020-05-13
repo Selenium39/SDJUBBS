@@ -25,4 +25,6 @@ public class SdjubbsSetting {
     private String qrSavePath;
     @Value("${block-picture-save-path}")
     private String blockPictureSavePath;
+    @Value("${sensitive-words-path}")
+    private String sensitiveWordPath;
 }
