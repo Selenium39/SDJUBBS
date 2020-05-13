@@ -11,7 +11,7 @@
  Target Server Version : 80017
  File Encoding         : 65001
 
- Date: 08/04/2020 00:38:31
+ Date: 13/05/2020 21:42:11
 */
 
 SET NAMES utf8mb4;
@@ -38,7 +38,7 @@ CREATE TABLE `article`  (
   INDEX `id`(`id`) USING BTREE,
   CONSTRAINT `fk_article_author` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_article_block` FOREIGN KEY (`block_id`) REFERENCES `block` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 3014 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3016 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of article
@@ -55,7 +55,7 @@ INSERT INTO `article` VALUES (0, 9, '文章标题096bb4', '文章内容1561ca1f-
 INSERT INTO `article` VALUES (0, 10, '文章标题5fde7c', '文章内容33ef2cb9-8', 1, '1111', 16, 'selenium', '2019-09-22 13:54:56', 0);
 INSERT INTO `article` VALUES (0, 11, '文章标题cee872', '文章内容dedaa717-4', 1, '1111', 16, 'selenium', '2019-09-22 13:54:56', 0);
 INSERT INTO `article` VALUES (0, 12, '文章标题2d0839', '文章内容7ea4f989-1', 1, '1111', 16, 'selenium', '2019-09-22 13:54:56', 0);
-INSERT INTO `article` VALUES (4, 13, '文章标题ea89a2', '文章内容0d4f6ddf-f', 1, '1111', 16, 'selenium', '2019-09-22 13:54:56', 1);
+INSERT INTO `article` VALUES (7, 13, '文章标题ea89a2', '文章内容0d4f6ddf-f', 1, '1111', 16, 'selenium', '2019-09-22 13:54:56', 1);
 INSERT INTO `article` VALUES (0, 14, '文章标题44243c', '文章内容7bb6f482-d', 1, '1111', 16, 'selenium', '2019-09-22 13:54:56', 1);
 INSERT INTO `article` VALUES (0, 15, '文章标题431df9', '文章内容348c7324-2', 1, '1111', 16, 'selenium', '2019-09-22 13:54:56', 0);
 INSERT INTO `article` VALUES (0, 16, '文章标题eb220f', '文章内容abf45783-5', 1, '1111', 16, 'selenium', '2019-09-22 13:54:56', 0);
@@ -3047,7 +3047,7 @@ INSERT INTO `article` VALUES (1, 3001, '文章标题', '<p><del>文章内容</de
 INSERT INTO `article` VALUES (0, 3002, '11111111111111', '<h1 id=\"h1-1111111111111111111111\"><a name=\"1111111111111111111111\" class=\"reference-link\"></a><span class=\"header-link octicon octicon-link\"></span>1111111111111111111111</h1>', 2, '222233', 16, 'selenium', '2020-01-28 17:14:46', 0);
 INSERT INTO `article` VALUES (0, 3003, '7777', '<p>8888</p>\n', 3, '3333', 16, 'selenium', '2020-01-28 17:33:31', 0);
 INSERT INTO `article` VALUES (1, 3004, '888', '<p>888</p>\n', 1, '1111', 16, 'selenium', '2020-01-28 17:44:28', 0);
-INSERT INTO `article` VALUES (0, 3005, '5555555555555555', '<p>55555555555555555</p>\n', 5, '555', 16, 'selenium', '2020-01-28 17:44:52', 1);
+INSERT INTO `article` VALUES (1, 3005, '5555555555555555', '<p>55555555555555555</p>\n', 5, '555', 16, 'selenium', '2020-01-28 17:44:52', 1);
 INSERT INTO `article` VALUES (0, 3006, '在家好无聊', '<p><strong>武汉加油</strong></p>\n', 5, '555', 16, 'selenium', '2020-02-11 12:22:10', 0);
 INSERT INTO `article` VALUES (0, 3007, '111111111111', '<p>222222222222222222</p>\n', 4, '4444', 16, 'selenium', '2020-03-02 06:46:21', 0);
 INSERT INTO `article` VALUES (0, 3008, '888888888', '<p>888888888888</p>\n', 5, '555', 50, 'aaaa', '2020-03-11 15:19:05', 0);
@@ -3055,7 +3055,9 @@ INSERT INTO `article` VALUES (0, 3009, '99999999', '<p>999999999999999</p>\n', 5
 INSERT INTO `article` VALUES (0, 3010, '666', '<p>666</p>\n', 6, '666', 16, 'selenium', '2020-03-16 17:23:19', 0);
 INSERT INTO `article` VALUES (0, 3011, '测试文章', '<p>测试测试测试</p>\n', 7, '测试板块', 16, 'selenium', '2020-03-16 17:40:26', 0);
 INSERT INTO `article` VALUES (0, 3012, '123213123', '<p>23123123</p>\n', 12, '板块???', 16, 'selenium', '2020-03-16 19:46:25', 0);
-INSERT INTO `article` VALUES (1, 3013, '上海电机学院', '<p><strong>上海电机学院~~~~</strong></p>\n', 5, '555', 16, 'selenium', '2020-04-05 15:23:15', 0);
+INSERT INTO `article` VALUES (2, 3013, '上海电机学院', '<p><strong>上海电机学院~~~~</strong></p>\n', 5, '555', 16, 'selenium', '2020-04-05 15:23:15', 0);
+INSERT INTO `article` VALUES (1, 3014, '敏感词测试', '<p>法轮功打法好</p>\n', 1, '1111', 16, 'selenium', '2020-05-13 21:27:00', 0);
+INSERT INTO `article` VALUES (1, 3015, '敏感词测试', '<p>***大法好</p>\n', 5, '555', 16, 'selenium', '2020-05-13 21:31:10', 0);
 
 -- ----------------------------
 -- Table structure for block
@@ -3079,11 +3081,11 @@ CREATE TABLE `block`  (
 -- ----------------------------
 -- Records of block
 -- ----------------------------
-INSERT INTO `block` VALUES (1, '/common/images/avatar/default.jpg', '1111', 16, 'selenium', 100, 200, '2019-09-05 00:30:01');
+INSERT INTO `block` VALUES (1, '/common/images/avatar/default.jpg', '1111', 16, 'selenium', 101, 200, '2019-09-05 00:30:01');
 INSERT INTO `block` VALUES (2, '/common/images/avatar/default.jpg', '222233', 16, 'selenium', 0, -1, '2019-09-22 12:17:03');
 INSERT INTO `block` VALUES (3, '/common/images/avatar/default.jpg', '3333', 16, 'selenium', 0, 1, '2019-09-02 12:17:13');
 INSERT INTO `block` VALUES (4, '/common/images/avatar/default.jpg', '4444', 16, 'selenium', 0, 0, '2019-10-29 12:17:16');
-INSERT INTO `block` VALUES (5, '/common/images/avatar/default.jpg', '555', 16, 'selenium', 3, 0, '2019-09-03 12:17:21');
+INSERT INTO `block` VALUES (5, '/common/images/avatar/default.jpg', '555', 16, 'selenium', 4, 0, '2019-09-03 12:17:21');
 INSERT INTO `block` VALUES (6, '/common/images/avatar/default.jpg', '666', 16, 'selenium', 7, 6, '2019-09-03 12:17:21');
 INSERT INTO `block` VALUES (7, '/common/images/avatar/1584357719424_img-4ec8fe1e117fe8b7e6b4be81ce8c11b9.jpg', '测试板块', 16, 'selenium', 1, 0, '2020-03-16 17:39:12');
 INSERT INTO `block` VALUES (9, '/common/images/avatar/1584357712552_img-4ec8fe1e117fe8b7e6b4be81ce8c11b9.jpg', '888', 16, 'selenium', 0, 0, '2020-03-16 17:46:21');
@@ -3108,7 +3110,7 @@ CREATE TABLE `comment`  (
   INDEX `fk_comment_user`(`user_id`) USING BTREE,
   CONSTRAINT `fk_comment_article` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_comment_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 78 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 79 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of comment
@@ -3175,6 +3177,7 @@ INSERT INTO `comment` VALUES (74, '77', '2020-03-05 16:28:32', 3001, 16, 'seleni
 INSERT INTO `comment` VALUES (75, '888', '2020-03-05 16:28:38', 3001, 16, 'selenium', 1);
 INSERT INTO `comment` VALUES (76, '3001条评论', '2020-03-05 16:31:12', 3001, 16, 'selenium', 1);
 INSERT INTO `comment` VALUES (77, '8888', '2020-04-05 15:22:23', 13, 16, 'selenium', 0);
+INSERT INTO `comment` VALUES (78, '123', '2020-04-23 22:59:01', 3013, 16, 'selenium', 0);
 
 -- ----------------------------
 -- Table structure for feature
@@ -3246,7 +3249,7 @@ CREATE TABLE `reply`  (
   CONSTRAINT `fk_reply_comment_comment_id` FOREIGN KEY (`comment_id`) REFERENCES `comment` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_reply_user_receiver_user_id` FOREIGN KEY (`receiver_user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_reply_user_send_user_id` FOREIGN KEY (`send_user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of reply
@@ -3259,6 +3262,7 @@ INSERT INTO `reply` VALUES (5, '7777777', '2019-11-26 19:19:53', 1, 16, 'seleniu
 INSERT INTO `reply` VALUES (6, '88888888', '2019-11-26 19:22:20', 3, 16, 'selenium', 16, 'selenium');
 INSERT INTO `reply` VALUES (7, '123', '2019-11-27 00:02:47', 67, 16, 'selenium', 16, 'selenium');
 INSERT INTO `reply` VALUES (8, '1111', '2020-01-12 11:33:52', 69, 16, 'selenium', 16, 'selenium');
+INSERT INTO `reply` VALUES (9, '123', '2020-04-23 22:59:08', 78, 16, 'selenium', 16, 'selenium');
 
 -- ----------------------------
 -- Table structure for user
@@ -3273,9 +3277,9 @@ CREATE TABLE `user`  (
   `gender` tinyint(1) NULL DEFAULT 0 COMMENT '0代表男,1代表女,2代表性别未知,默认为2',
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '必须且唯一，用于找回密码',
   `phone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '默认为00000000000',
-  `head_picture` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
-  `register_time` datetime(0) NOT NULL,
-  `last_login_time` datetime(0) NOT NULL,
+  `head_picture` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '头像',
+  `register_time` datetime(0) NOT NULL COMMENT '注册时间',
+  `last_login_time` datetime(0) NOT NULL COMMENT '上次登录时间',
   `status` tinyint(1) NOT NULL COMMENT 'o代表可以用户有效,1代表用户被禁用',
   `role` tinyint(1) NOT NULL COMMENT '0代表普通用户,1代表管理员',
   PRIMARY KEY (`id`) USING BTREE,
@@ -4306,9 +4310,6 @@ INSERT INTO `user` VALUES (1057, 'ffac939', '8888888888888', '888888', 0, NULL, 
 INSERT INTO `user` VALUES (1058, 'bb65b34', '8888888888888', '888888', 0, NULL, '9fb6631@qq.com', NULL, '/common/images/avatar/default.jpg', '2020-04-05 00:51:58', '2020-04-05 00:51:58', 0, 0);
 INSERT INTO `user` VALUES (1059, '7417038', '8888888888888', '888888', 0, NULL, '686afce@qq.com', NULL, '/common/images/avatar/default.jpg', '2020-04-05 00:51:58', '2020-04-05 00:51:58', 0, 0);
 INSERT INTO `user` VALUES (1060, '7a7949c', '8888888888888', '888888', 0, NULL, '15ba7e1@qq.com', NULL, '/common/images/avatar/default.jpg', '2020-04-05 00:51:58', '2020-04-05 00:51:58', 0, 0);
-INSERT INTO `user` VALUES (1061, '0c68b58', '8888888888888', '888888', 0, NULL, 'f3bf271@qq.com', NULL, '/common/images/avatar/default.jpg', '2020-04-05 00:51:58', '2020-04-05 00:51:58', 0, 0);
-INSERT INTO `user` VALUES (1062, 'bb68d6e', '8888888888888', '888888', 0, NULL, 'ce05bde@qq.com', NULL, '/common/images/avatar/default.jpg', '2020-04-05 00:51:58', '2020-04-05 00:51:58', 0, 0);
-INSERT INTO `user` VALUES (1063, '607aba9', '8888888888888', '888888', 0, NULL, 'afc63f9@qq.com', NULL, '/common/images/avatar/default.jpg', '2020-04-05 00:51:58', '2020-04-05 00:51:58', 0, 0);
-INSERT INTO `user` VALUES (1064, '6e562c9', '8888888888888', '888888', 0, NULL, 'aadfd55@qq.com', NULL, '/common/images/avatar/default.jpg', '2020-04-05 00:51:58', '2020-04-05 00:51:58', 0, 0);
+INSERT INTO `user` VALUES (1061, '0c68b58', '8888888888888', '888888', 0, NULL, 'f3bf271@qq.com', NULL, '/common/images/avatar/default.jpg', '2020-04-05 00:51:58', '2020-04-05 00:51:58', 1, 0);
 
 SET FOREIGN_KEY_CHECKS = 1;
