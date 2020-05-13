@@ -36,6 +36,12 @@
         from article
         where title like concat(concat('%',#{search}),'%')
     </select>
+    <select id="getTopArticle" resultType="TopArticleInfo">
+        select title,see_num
+        from article
+        order by see_num desc
+        limit #{top}
+    </select>
     <update id="updateArticle" parameterType="Article">
         update article
         <set>

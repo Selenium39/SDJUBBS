@@ -1,6 +1,7 @@
 package com.selenium.sdjubbs.common.mapper;
 
 import com.selenium.sdjubbs.common.bean.Article;
+import com.selenium.sdjubbs.common.bean.TopArticleInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,6 +21,8 @@ public interface ArticleMapper {
     List<Article> getAllArticle();
 
     List<Article> getAllArticleBySearch(String search);
+
+    List<TopArticleInfo> getTopArticle(int top);
 
     Integer updateArticle(Article article);
 

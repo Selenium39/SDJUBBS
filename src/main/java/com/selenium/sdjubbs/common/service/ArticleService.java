@@ -1,6 +1,7 @@
 package com.selenium.sdjubbs.common.service;
 
 import com.selenium.sdjubbs.common.bean.Article;
+import com.selenium.sdjubbs.common.bean.TopArticleInfo;
 import com.selenium.sdjubbs.common.mapper.ArticleMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,15 @@ public class ArticleService implements ArticleMapper {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Article> getAllArticleBySearch(String search) {
         return articleMapper.getAllArticleBySearch(search);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TopArticleInfo> getTopArticle(int top) {
+        return articleMapper.getTopArticle(top);
     }
 
     @Override

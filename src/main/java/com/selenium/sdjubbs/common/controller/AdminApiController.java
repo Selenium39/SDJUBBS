@@ -785,6 +785,13 @@ public class AdminApiController {
         return Result.success().add("infos", infos);
     }
 
+    @GetMapping(Api.STATISTICS_ARTICLE_INFO)
+    @ApiOperation(value = "获取文章排名信息")
+    protected Result getArticleInfo(String name, String sessionId,int num) {
+        List<TopArticleInfo> infos = articleService.getTopArticle(num);
+        return Result.success().add("infos", infos);
+    }
+
     @GetMapping(Api.STATISTICS_REGISTER_INFO)
     @ApiOperation(value = "获取注册用户信息")
     protected Result getRegisterUserInfo(String name, String sessionId, int num) {
